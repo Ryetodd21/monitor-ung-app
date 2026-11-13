@@ -1,0 +1,217 @@
+# Gradle Version Catalog — single source of truth for all dependency versions.
+#
+# Generated 2026-09-26 from app/build.gradle.kts (Ponytail refactor).
+# Bump versions here, not in individual build.gradle.kts files.
+#
+# Sections:
+#   [versions]  — version strings keyed by short alias
+#   [libraries] — dependency coordinates keyed by short alias
+#   [plugins]   — Gradle plugin coordinates keyed by short alias
+#   [bundles]   — groups of libraries applied together
+
+[versions]
+# Build tooling
+agp = "9.5.1"
+kotlin = "2.4.21"
+ksp = "2.3.13"
+composeBom = "2026.09.00"
+
+# AndroidX core
+coreKtx = "1.19.1"
+lifecycle = "2.11.0"
+activityCompose = "1.13.0"
+splashscreen = "1.2.0"
+
+# Compose
+# Most Compose artifacts use the BOM (no version needed)
+
+# Navigation
+navigationCompose = "2.10.2"
+
+# DI
+hilt = "2.60.1"
+hiltExt = "1.4.0"
+
+# Persistence
+room = "2.8.5"
+sqlcipher = "4.20.0"
+sqliteKtx = "2.7.1"
+datastore = "1.3.0"
+
+# Networking
+retrofit = "3.0.0"
+okhttp = "5.5.1"
+
+# MQTT
+paho = "1.2.5"
+
+# Round 27 — Firebase Cloud Messaging
+firebaseMessaging = "24.1.2"
+
+# Background work
+workManager = "2.12.0"
+
+# Security
+securityCrypto = "1.1.0"
+tink = "1.24.0"
+
+# Google Play Services
+playServicesLocation = "21.4.0"
+
+# Coroutines
+coroutines = "1.11.0"
+
+# Accompanist
+accompanistPermissions = "0.37.3"
+
+# Biometric
+biometric = "1.1.0"
+
+# Testing
+junit = "4.13.2"
+androidxTestExtJunit = "1.3.0"
+espressoCore = "3.7.0"
+
+[libraries]
+# Compose (BOM-managed — versions omitted, BOM pins them)
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+compose-ui-util = { module = "androidx.compose.ui:ui-util" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-material3-window-size = { module = "androidx.compose.material3:material3-window-size-class" }
+compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+
+# Core AndroidX
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+
+# Navigation
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+
+# DI — Hilt
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltExt" }
+androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltExt" }
+androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltExt" }
+
+# Persistence
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+sqlcipher-android = { module = "net.zetetic:sqlcipher-android", version.ref = "sqlcipher" }
+androidx-sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqliteKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+# Networking
+retrofit-core = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
+
+# MQTT
+paho-mqtt = { module = "org.eclipse.paho:org.eclipse.paho.client.mqttv3", version.ref = "paho" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "firebaseMessaging" }
+
+# Background work
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
+
+# Security
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
+tink-android = { module = "com.google.crypto.tink:tink-android", version.ref = "tink" }
+
+# Google Play Services
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+
+# Coroutines
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
+
+# Accompanist
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+
+# Biometric
+androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
+
+# Testing
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
+androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+
+[bundles]
+# Convenience bundles — apply a group of related libraries at once.
+
+# All Compose UI artifacts used in the main source set.
+compose = [
+    "compose-ui",
+    "compose-ui-graphics",
+    "compose-ui-util",
+    "compose-ui-tooling-preview",
+    "compose-material3",
+    "compose-material3-window-size",
+    "compose-material-icons-extended",
+]
+
+# Room + SQLite + DataStore — all on-device persistence.
+persistence = [
+    "androidx-room-runtime",
+    "androidx-room-ktx",
+    "androidx-sqlite-ktx",
+    "androidx-datastore-preferences",
+    "sqlcipher-android",
+]
+
+# Coroutines trio (core + android + play-services).
+coroutines = [
+    "kotlinx-coroutines-core",
+    "kotlinx-coroutines-android",
+    "kotlinx-coroutines-play-services",
+]
+
+# OkHttp + Retrofit + Gson converter — full HTTP stack.
+http = [
+    "okhttp-core",
+    "okhttp-logging-interceptor",
+    "retrofit-core",
+    "retrofit-converter-gson",
+]
+
+# Lifecycle & Activity — runtime + Compose interop.
+android-runtime = [
+    "androidx-core-ktx",
+    "androidx-core-splashscreen",
+    "androidx-lifecycle-runtime-ktx",
+    "androidx-lifecycle-runtime-compose",
+    "androidx-lifecycle-viewmodel-compose",
+    "androidx-activity-compose",
+]
+
+# Hilt runtime + Compose + Work + KSP processors (Hilt is split).
+hilt = [
+    "hilt-android",
+    "androidx-hilt-navigation-compose",
+    "androidx-hilt-work",
+]
+
+# Security: encrypted storage + Tink.
+security = [
+    "androidx-security-crypto",
+    "tink-android",
+]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-services = { id = "com.google.gms.google-services", version = "4.6.0" }

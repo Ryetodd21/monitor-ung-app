@@ -1,0 +1,51 @@
+# Gradle / Kotlin generated state
+.gradle/
+.kotlin/
+build/
+.cxx/
+.externalNativeBuild/
+captures/
+*.apk
+*.aab
+*.apks
+*.hprof
+
+# Machine-specific configuration and signing secrets
+local.properties
+/gradle.properties
+keystore.properties
+signing.properties
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.pem
+*.key
+google-services.json
+credentials.json
+*service-account*.json
+*service_account*.json
+*-firebase-adminsdk-*.json
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# IDE, logs and local data
+.idea/
+*.iml
+*.log
+*.pid
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Keep Gradle wrapper, Room schemas, agent configuration and project memory.
+# AGENTS.md, CLAUDE.md, ARCHITECTURE.md and memory folders are not ignored.

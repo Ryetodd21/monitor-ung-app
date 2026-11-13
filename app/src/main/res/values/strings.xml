@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Monitor UNG</string>
+
+    <!-- Notification channels -->
+    <string name="channel_monitoring_id">monitor_ung_monitoring</string>
+    <string name="channel_monitoring_name">Active Monitoring</string>
+    <string name="channel_monitoring_desc">App monitoring status during class hours</string>
+
+    <string name="channel_reminder_id">monitor_ung_reminder</string>
+    <string name="channel_reminder_name">Schedule Reminder</string>
+    <string name="channel_reminder_desc">Class schedule and location reminders</string>
+
+    <string name="channel_sync_id">monitor_ung_sync</string>
+    <string name="channel_sync_name">Data Sync</string>
+    <string name="channel_sync_desc">Reminders to sync data to the server</string>
+
+    <!-- Old channel (deprecated, kept for compatibility) -->
+    <!-- Auth (LoginScreen) -->
+    <string name="auth_login">Log in</string>
+    <string name="auth_password">Password</string>
+    <!-- Biometric gate -->
+    <string name="biometric_title">Verifikasi identitas</string>
+    <string name="biometric_subtitle">Buka Monitor UNG dengan verifikasi perangkat</string>
+    <string name="biometric_verify_now">Verifikasi sekarang</string>
+    <string name="biometric_logout">Masuk dengan akun</string>
+    <string name="biometric_welcome_user">Halo, %1$s</string>
+    <string name="biometric_help">Gunakan sidik jari atau metode keamanan yang tersedia pada dialog perangkat.</string>
+    <string name="biometric_enable_title">Enable biometric verification?</string>
+    <string name="biometric_enable_body">Turn on fingerprint or PIN verification for extra security. Each time you open the app, you\'ll need to verify even if you\'re already logged in.</string>
+    <string name="biometric_enable_yes">Enable</string>
+
+    <!-- Home -->
+    <string name="home_sync_now">Sync now</string>
+    <string name="home_sync_status">Sync status</string>
+    <string name="home_last_sync">Last sync %1$s</string>
+    <string name="home_no_data">No data yet</string>
+    <string name="home_tap_to_sync">Tap to start tracking</string>
+    <string name="home_title">Today\'s summary</string>
+    <string name="home_recent_activity">Recent 3 days</string>
+    <string name="home_collect_data">Collect data</string>
+    <string name="home_collecting">Collecting…</string>
+    <string name="home_metric_screen_time">Screen time</string>
+    <string name="home_metric_unlock">Unlock</string>
+    <string name="home_metric_social">Social</string>
+    <string name="home_metric_game">Game</string>
+    <string name="home_used_during_class">Usage detected during class hours</string>
+    <string name="home_chip_pending">Pending</string>
+    <string name="home_chip_unavailable">—</string>
+    <string name="home_mqtt_label">MQTT</string>
+
+    <!-- History -->
+    <string name="history_synced">Synced</string>
+    <string name="history_pending">Pending</string>
+    <string name="history_30_title">30-day history</string>
+    <string name="history_30_subtitle">Data is auto-deleted after upload to the server</string>
+    <string name="history_about_title">About this data</string>
+    <string name="history_about_body">Your phone usage data is stored locally and uploaded nightly (22:00–04:00 WITA). Once received, the local copy is deleted automatically. There is no manual delete button to keep the data intact.</string>
+    <string name="history_summary_30">30-day summary</string>
+    <string name="history_30_day_total">Total from all days</string>
+    <string name="history_total_screen">Total screen</string>
+    <string name="history_avg_day">Average/day</string>
+    <plurals name="history_days_suffix">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <plurals name="history_used_during_class">
+        <item quantity="one">%1$d day with usage detected during class</item>
+        <item quantity="other">%1$d days with usage detected during class</item>
+    </plurals>
+    <string name="history_daily_detail">Daily detail</string>
+    <string name="history_all_uploaded">All data uploaded to server</string>
+    <plurals name="history_pending_count">
+        <item quantity="one">%1$d entry pending</item>
+        <item quantity="other">%1$d entries pending</item>
+    </plurals>
+    <string name="history_empty_to_upload">No data to upload yet</string>
+    <string name="history_empty_title">No data yet</string>
+    <string name="history_empty_subtitle">Your phone usage data will appear here once monitoring is active</string>
+    <string name="history_metric_label_class">Class</string>
+    <string name="history_metric_active">Active</string>
+
+    <!-- Schedule -->
+    <string name="schedule_title">Schedule</string>
+    <string name="schedule_no_classes">No classes scheduled</string>
+    <string name="schedule_tab_schedule">Schedule</string>
+    <string name="schedule_tab_requests">Requests</string>
+    <string name="schedule_request_fab">Request new schedule</string>
+    <string name="schedule_active_label">ACTIVE</string>
+    <string name="schedule_request_sheet_title">Request new class</string>
+    <string name="schedule_request_info">Requests will be verified by admin before being added to your schedule.</string>
+    <string name="schedule_field_day">Day</string>
+    <string name="schedule_field_start_time">Start time</string>
+    <string name="schedule_field_end_time">End time</string>
+    <string name="schedule_field_subject">Subject</string>
+    <string name="schedule_field_campus_unspecified">Campus location not yet set</string>
+    <string name="schedule_field_room_optional">Room (optional)</string>
+    <string name="schedule_field_lecturer_optional">Lecturer (optional)</string>
+    <string name="schedule_default_description">New schedule request</string>
+    <string name="schedule_submit">Submit request</string>
+    <string name="schedule_status_pending">Pending</string>
+    <string name="schedule_status_approved">Approved</string>
+    <string name="schedule_status_rejected">Rejected</string>
+    <string name="schedule_no_requests">No requests yet</string>
+    <string name="schedule_no_requests_hint">Press + to request a new class</string>
+    <string name="schedule_my_requests">My requests</string>
+    <string name="schedule_loading_directory">Loading directory…</string>
+    <string name="schedule_days_mon">Mon</string>
+    <string name="schedule_days_tue">Tue</string>
+    <string name="schedule_days_wed">Wed</string>
+    <string name="schedule_days_thu">Thu</string>
+    <string name="schedule_days_fri">Fri</string>
+    <string name="schedule_days_sat">Sat</string>
+    <string name="schedule_days_sun">Sun</string>
+
+    <!-- Profile -->
+    <string name="profile_edit">Edit</string>
+    <string name="profile_change_avatar">Change photo</string>
+    <string name="profile_save">Save changes</string>
+    <string name="profile_field_full_name">Full name</string>
+    <string name="profile_field_email">Email</string>
+    <string name="profile_field_phone">Phone</string>
+    <string name="profile_field_bio">Bio</string>
+    <string name="profile_save_success">Profile saved! 🎉</string>
+    <string name="profile_my_profile">My profile</string>
+    <string name="profile_achievements">Achievements</string>
+    <string name="profile_section_account">Account info</string>
+    <string name="profile_section_security">Security</string>
+    <string name="profile_password_label">Password</string>
+    <string name="profile_password_subtitle">Change your password regularly</string>
+    <string name="profile_change_password">Change</string>
+    <string name="profile_change_password_title">Change password</string>
+    <string name="profile_current_password">Current password</string>
+    <string name="profile_new_password">New password</string>
+    <string name="profile_confirm_new_password">Confirm new password</string>
+    <string name="profile_password_mismatch">Passwords don\'t match</string>
+    <string name="profile_password_changed">Password changed</string>
+    <string name="profile_save_in_progress">Saving…</string>
+    <string name="profile_back">Back</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_amoled">AMOLED</string>
+    <string name="settings_sync">Data sync</string>
+    <plurals name="settings_pending_count">
+        <item quantity="one">%1$d entry waiting</item>
+        <item quantity="other">%1$d entries waiting</item>
+    </plurals>
+    <string name="settings_sync_now">Sync now</string>
+    <string name="settings_sync_now_subtitle">Send pending data to server</string>
+    <string name="settings_delete_confirm_title">Delete all data?</string>
+    <string name="settings_delete_confirm_body">This clears all stored logs and signs you out. Cannot be undone.</string>
+    <string name="settings_delete_confirm_yes">Delete</string>
+    <string name="settings_delete_confirm_no">Cancel</string>
+    <string name="settings_delete_success_toast">Local data cleared</string>
+    <string name="settings_logout_confirm_title">Log out?</string>
+    <string name="settings_logout_confirm_body">You can log back in any time.</string>
+    <string name="settings_logout_confirm_yes">Log out</string>
+    <string name="settings_logout_confirm_no">Cancel</string>
+    <string name="settings_server_data_note">Your data on the server does not change.</string>
+    <string name="settings_default_user_name">Student</string>
+    <string name="settings_edit_profile_cd">Edit profile</string>
+    <string name="settings_section_sync">Sync</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_section_permissions">System permissions</string>
+    <string name="settings_section_privacy">Privacy</string>
+    <string name="settings_section_about">About</string>
+    <string name="settings_pending_logs">Pending logs</string>
+    <string name="settings_mqtt_connection">MQTT connection</string>
+    <string name="settings_mqtt_subtitle">Real-time connection status</string>
+    <string name="settings_mqtt_idle">Connected · no events yet</string>
+    <string name="settings_mqtt_log_received">Live · log received</string>
+    <string name="settings_mqtt_training_completed">Live · training done</string>
+    <string name="settings_usage_access">Usage access</string>
+    <string name="settings_usage_access_subtitle">App usage statistics access</string>
+    <string name="settings_location">Location</string>
+    <string name="settings_location_subtitle">Campus proximity detection</string>
+    <string name="settings_notification_status">Notifications</string>
+    <string name="settings_notification_subtitle">Active monitoring status</string>
+    <string name="settings_permission_granted">Granted</string>
+    <string name="settings_permission_tap_to_grant">Tap to grant</string>
+    <string name="settings_biometric">Biometric verification</string>
+    <string name="settings_biometric_subtitle">Required to open the app</string>
+    <string name="settings_biometric_enroll_required">Enable fingerprint or screen lock in system Settings first</string>
+    <string name="settings_biometric_verify_failed">Biometric verification failed. Please try again.</string>
+    <string name="biometric_verify_title">Confirm your identity</string>
+    <string name="biometric_verify_settings_subtitle">Verify your fingerprint or PIN to enable biometric login</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_version_value">v1.0.0</string>
+    <string name="settings_privacy_policy">Privacy policy</string>
+    <string name="settings_privacy_policy_subtitle">Read the full privacy policy</string>
+    <string name="settings_delete_all">Delete all data</string>
+    <string name="settings_delete_all_subtitle">Delete local data from this device</string>
+    <string name="settings_logout_button">Log out</string>
+    <string name="settings_home">Back to Home</string>
+
+    <!-- Permission onboarding -->
+    <string name="permission_step_terms">Terms</string>
+    <string name="permission_step_permissions">Allow</string>
+    <string name="permission_header_title">Allow access on this device</string>
+    <string name="permission_header_subtitle">This is so the app can run correctly</string>
+    <string name="permission_all_done">All permissions granted</string>
+    <string name="permission_pending">Permissions pending</string>
+    <plurals name="permission_progress">
+        <item quantity="one">%1$d of %2$d required permission is active</item>
+        <item quantity="other">%1$d of %2$d required permissions are active</item>
+    </plurals>
+    <string name="permission_tap_each">Tap each permission below to grant access</string>
+    <string name="permission_required_badge">REQUIRED</string>
+    <string name="permission_battery_title">Background usage (real-time)</string>
+    <string name="permission_battery_desc">Set to \"Optimized\" so the app can update in real-time during class hours. Saves battery, monitoring only runs during active hours and syncs at night (22:00–04:00).</string>
+    <string name="permission_battery_tap">Tap to open battery settings</string>
+    <string name="permission_safety_title">Safe and sound!</string>
+    <string name="permission_safety_desc">All permissions are only used to monitor your study habits. Data is encrypted and never shared with third parties.</string>
+    <string name="permission_button_done">Done, continue!</string>
+    <string name="permission_button_continue">Skip for now</string>
+    <string name="permission_skip_hint">Permissions not granted can be set up later in Profile > Settings</string>
+    <string name="permission_usage_title">App usage access</string>
+    <string name="permission_usage_desc">So the app knows what you use your phone for. We only check social media and games.</string>
+    <string name="permission_usage_how">Settings > Usage Access > MonitorUNG > Allow</string>
+    <string name="permission_location_title">Location (approximate)</string>
+    <string name="permission_location_desc_human">Verify you\'re really on campus during class. Doesn\'t use precise GPS.</string>
+    <string name="permission_location_how">Android popup, choose \"Allow\"</string>
+    <string name="permission_notification_title">Notifications</string>
+    <string name="permission_notification_desc_human">Tell you when class is about to start or important updates from campus.</string>
+    <string name="permission_notification_how">Android popup, choose \"Allow\"</string>
+
+    <!-- Terms onboarding -->
+    <string name="terms_step_terms">Terms</string>
+    <string name="terms_step_permissions">Allow</string>
+    <string name="terms_header_title">Read me first!</string>
+    <string name="terms_header_subtitle">We need your consent before we begin</string>
+    <string name="terms_scroll_hint">Scroll down to read everything</string>
+    <string name="terms_q1_title">What is this app?</string>
+    <string name="terms_q1_body">Monitor UNG helps lecturers and campus admins understand your study habits. The goal is to make teaching at UNG better.</string>
+    <string name="terms_q2_title">What data is collected?</string>
+    <string name="terms_q2_bullet_1">How long you use your phone each day</string>
+    <string name="terms_q2_bullet_2">Which apps you open (social, games, etc.)</string>
+    <string name="terms_q2_bullet_3">How many times you unlock the screen</string>
+    <string name="terms_q2_bullet_4">Whether you\'re on campus during class hours</string>
+    <string name="terms_q3_title">Is location tracked?</string>
+    <string name="terms_q3_body">Only coarse location (±100 meters), not precise GPS. We don\'t know which room you\'re in. It only verifies you\'re in the campus area during class hours.</string>
+    <string name="terms_q4_title">Is my data safe?</string>
+    <string name="terms_q4_bullet_1">Data on your phone is encrypted with a unique key</string>
+    <string name="terms_q4_bullet_2">Upload to the server uses HTTPS</string>
+    <string name="terms_q4_bullet_3">Only campus admins can see it</string>
+    <string name="terms_q4_bullet_4">Never sold or shared with anyone</string>
+    <string name="terms_q5_title">You have rights</string>
+    <string name="terms_q5_bullet_1">Know exactly what data is collected</string>
+    <string name="terms_q5_bullet_2">Request deletion of your data anytime</string>
+    <string name="terms_q5_bullet_3">Turn off monitoring via Settings</string>
+    <string name="terms_q5_bullet_4">Ask campus admin if anything is unclear</string>
+    <string name="terms_warning_title">If you decline</string>
+    <string name="terms_warning_body">Monitoring features won\'t run and your data won\'t be sent to the campus server. You can still use the app.</string>
+    <string name="terms_checkbox_ready">I have read and agree</string>
+    <string name="terms_checkbox_wait">Scroll to the bottom first, then check here</string>
+    <string name="terms_decline_button">No, thanks</string>
+    <string name="terms_accept_button">Yes, I agree</string>
+
+    <!-- Common -->
+    <string name="common_cancel">Cancel</string>
+    <string name="common_save">Save</string>
+    <string name="common_skip">Skip</string>
+    <!-- LoginScreen -->
+    <string name="login_app_subtitle">Universitas Negeri Gorontalo</string>
+    <string name="login_nim_label">NIM</string>
+    <string name="login_nim_placeholder">NIM or email, e.g. 123456789 or name@ung.ac.id</string>
+    <string name="login_auto_login">Auto login…</string>
+    <string name="login_password_toggle_show">Show</string>
+    <string name="login_password_toggle_hide">Hide</string>
+    <string name="login_register">Register Account</string>
+    <string name="login_download_app">Download App</string>
+    <string name="login_privacy_note">By logging in, you agree to the app\'s privacy policy. App usage and location data will be collected for academic monitoring purposes.</string>
+
+    <!-- Gamified UI -->
+    <string name="level_badge">Level %1$d</string>
+    <string name="level_xp_label">%1$d XP</string>
+    <string name="level_xp_to_next">%1$d XP to next level</string>
+    <string name="achievement_locked">Locked</string>
+    <string name="achievement_first_login">First Login</string>
+    <string name="achievement_first_sync">First Sync</string>
+    <string name="achievement_privacy">Privacy</string>
+    <plurals name="streak_days">
+        <item quantity="one">%1$d day streak</item>
+        <item quantity="other">%1$d day streak</item>
+    </plurals>
+    <string name="history_achievement_3day">3-day</string>
+    <string name="history_achievement_7day">7-day</string>
+    <string name="history_achievement_14day">14-day</string>
+    <string name="challenge_done">Done!</string>
+    <string name="challenge_completed_label">Challenge completed!</string>
+    <string name="challenge_progress_label">%1$d%% complete</string>
+    <string name="challenge_reduce_title">Reduce Screen Time</string>
+    <string name="challenge_reduce_desc">Reduce your screen time by 30 minutes today</string>
+    <string name="challenge_nososmed_title">No Social Media</string>
+    <string name="challenge_nososmed_desc">Use your phone without social media today</string>
+    <string name="challenge_early_title">Early Bird</string>
+    <string name="challenge_early_desc">Start your study session before 9 AM</string>
+    <string name="challenge_streak_title">Keep Your Streak</string>
+    <string name="challenge_streak_desc">Stay focused today to keep your streak going</string>
+    <!-- New Home Cards -->
+    <string name="home_schedule_card_title">Today\'s Schedule</string>
+    <string name="home_schedule_no_class">No classes today</string>
+    <string name="home_schedule_room">Room %1$s</string>
+    <string name="home_30day_summary_title">30-Day Summary</string>
+    <plurals name="home_30day_active_days">
+        <item quantity="one">%1$d active day</item>
+        <item quantity="other">%1$d active days</item>
+    </plurals>
+    <string name="home_today_label">TODAY</string>
+    <string name="home_30day_label">30 DAYS</string>
+    <string name="home_today_title">Today\'s usage</string>
+    <string name="home_class_usage_title">Class-time usage</string>
+    <string name="home_class_usage_scheduled">During class</string>
+    <string name="home_class_usage_outside">Outside class</string>
+    <string name="home_class_usage_absent">Class without campus presence</string>
+    <plurals name="home_class_usage_classes">
+        <item quantity="one">%1$d class · %2$d attended</item>
+        <item quantity="other">%1$d classes · %2$d attended</item>
+    </plurals>
+    <string name="home_30day_avg">avg/day</string>
+    <string name="home_location_card_title">Last location check</string>
+    <string name="home_location_never">No location check yet</string>
+    <string name="home_location_on_campus">On campus</string>
+    <string name="home_location_off_campus">Off campus</string>
+    <string name="home_location_unknown">Location unavailable</string>
+    <string name="home_pending_entries_title">Pending Entries</string>
+    <string name="home_offline_label">Offline. Akses lokal maksimal 24 jam; data menunggu sinkronisasi malam atau manual.</string>
+    <string name="home_quick_action_card_title">Quick Actions</string>
+    <string name="biometric_unavailable">Verifikasi perangkat tidak tersedia. Coba lagi atau masuk menggunakan akun Anda.</string>
+    <string name="biometric_cancelled">Verifikasi dibatalkan. Data tetap terkunci; ketuk Verifikasi untuk mencoba lagi.</string>
+    <string name="biometric_waiting">Menunggu verifikasi…</string>
+    <string name="biometric_local_notice">Verifikasi dilakukan oleh perangkat. Akses offline berlaku hingga 24 jam sejak sesi terakhir divalidasi server.</string>
+</resources>

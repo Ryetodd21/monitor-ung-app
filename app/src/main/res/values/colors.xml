@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Brand Colors — matching website -->
+    <color name="blue_700">#FF2563EB</color>
+    <!-- Surface Colors -->
+    <color name="white">#FFFFFFFF</color>
+    <!-- Text Colors -->
+    <!-- Status Colors -->
+    <!-- Chart Colors -->
+    <!-- Splash -->
+    <color name="splash_background">#FF4361EE</color>
+</resources>

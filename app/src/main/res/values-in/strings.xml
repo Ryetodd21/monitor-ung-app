@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Monitor UNG</string>
+
+    <!-- Notification channels -->
+    <string name="channel_monitoring_id">monitor_ung_monitoring</string>
+    <string name="channel_monitoring_name">Monitoring Aktif</string>
+    <string name="channel_monitoring_desc">Status monitoring aplikasi saat jam kuliah</string>
+
+    <string name="channel_reminder_id">monitor_ung_reminder</string>
+    <string name="channel_reminder_name">Pengingat Jadwal</string>
+    <string name="channel_reminder_desc">Pengingat jadwal kuliah dan lokasi</string>
+
+    <string name="channel_sync_id">monitor_ung_sync</string>
+    <string name="channel_sync_name">Sinkronisasi Data</string>
+    <string name="channel_sync_desc">Pengingat sinkronisasi data ke server</string>
+
+    <!-- Old channel (deprecated, kept for compatibility) -->
+    <!-- Auth (LoginScreen) -->
+    <string name="auth_login">Masuk</string>
+    <string name="auth_password">Kata Sandi</string>
+    <!-- Biometric gate -->
+    <string name="biometric_title">Verifikasi identitas</string>
+    <string name="biometric_subtitle">Buka Monitor UNG dengan verifikasi perangkat</string>
+    <string name="biometric_verify_now">Verifikasi sekarang</string>
+    <string name="biometric_logout">Masuk dengan akun</string>
+    <string name="biometric_welcome_user">Halo, %1$s</string>
+    <string name="biometric_help">Gunakan sidik jari atau metode keamanan yang tersedia pada dialog perangkat.</string>
+    <string name="biometric_enable_title">Aktifkan Verifikasi Biometrik?</string>
+    <string name="biometric_enable_body">Aktifkan verifikasi sidik jari atau PIN untuk keamanan tambahan. Setiap kali membuka aplikasi, Anda perlu verifikasi meskipun sudah login.</string>
+    <string name="biometric_enable_yes">Aktifkan</string>
+
+    <!-- Home -->
+    <string name="home_sync_now">Sinkron sekarang</string>
+    <string name="home_sync_status">Status sinkronisasi</string>
+    <string name="home_last_sync">Sinkron terakhir %1$s</string>
+    <string name="home_no_data">Belum ada data</string>
+    <string name="home_tap_to_sync">Ketuk untuk mulai tracking</string>
+    <string name="home_title">Ringkasan Hari Ini</string>
+    <string name="home_recent_activity">Aktivitas 3 Hari Terakhir</string>
+    <string name="home_collect_data">Kumpulkan Data</string>
+    <string name="home_collecting">Mengumpulkan…</string>
+    <string name="home_metric_screen_time">Screen Time</string>
+    <string name="home_metric_unlock">Unlock</string>
+    <string name="home_metric_social">Sosmed</string>
+    <string name="home_metric_game">Game</string>
+    <string name="home_used_during_class">Penggunaan terdeteksi saat jam kuliah</string>
+    <string name="home_chip_pending">Pending</string>
+    <string name="home_chip_unavailable">—</string>
+    <string name="home_mqtt_label">MQTT</string>
+
+    <!-- History -->
+    <string name="history_synced">Tersinkron</string>
+    <string name="history_pending">Menunggu</string>
+    <string name="history_30_title">Histori 30 Hari</string>
+    <string name="history_30_subtitle">Data otomatis terhapus setelah terkirim ke server</string>
+    <string name="history_about_title">Tentang Data Ini</string>
+    <string name="history_about_body">Data pemakaian HP kamu disimpan di HP secara lokal dan otomatis dikirim ke server kampus setiap malam (22.00–04.00 WITA). Setelah sampai di server, data di HP kamu akan dihapus otomatis. Tidak ada tombol hapus manual demi menjaga integritas data.</string>
+    <string name="history_summary_30">Ringkasan 30 Hari</string>
+    <string name="history_30_day_total">Total dari semua hari</string>
+    <string name="history_total_screen">Total Screen</string>
+    <string name="history_avg_day">Rata-rata/hari</string>
+    <plurals name="history_days_suffix">
+        <item quantity="other">%1$d hari</item>
+    </plurals>
+    <plurals name="history_used_during_class">
+        <item quantity="other">%1$d hari terdeteksi penggunaan saat jam kuliah</item>
+    </plurals>
+    <string name="history_daily_detail">Detail Harian</string>
+    <string name="history_all_uploaded">Semua data sudah terkirim ke server</string>
+    <plurals name="history_pending_count">
+        <item quantity="other">%1$d data belum terkirim</item>
+    </plurals>
+    <string name="history_empty_to_upload">Belum ada data untuk dikirim</string>
+    <string name="history_empty_title">Belum Ada Data</string>
+    <string name="history_empty_subtitle">Data pemakaian HP kamu akan muncul di sini setelah monitoring aktif</string>
+    <string name="history_metric_label_class">Kuliah</string>
+    <string name="history_metric_active">Aktif</string>
+
+    <!-- Schedule -->
+    <string name="schedule_title">Jadwal</string>
+    <string name="schedule_no_classes">Tidak ada jadwal</string>
+    <string name="schedule_tab_schedule">Jadwal</string>
+    <string name="schedule_tab_requests">Request</string>
+    <string name="schedule_request_fab">Ajukan Jadwal</string>
+    <string name="schedule_active_label">AKTIF</string>
+    <string name="schedule_request_sheet_title">Ajukan Jadwal Baru</string>
+    <string name="schedule_request_info">Request akan diverifikasi admin sebelum ditambahkan ke jadwal.</string>
+    <string name="schedule_field_day">Hari</string>
+    <string name="schedule_field_start_time">Jam Mulai</string>
+    <string name="schedule_field_end_time">Jam Selesai</string>
+    <string name="schedule_field_subject">Mata Kuliah</string>
+    <string name="schedule_field_campus_unspecified">Lokasi kampus belum ditentukan</string>
+    <string name="schedule_field_room_optional">Ruang (opsional)</string>
+    <string name="schedule_field_lecturer_optional">Dosen (opsional)</string>
+    <string name="schedule_default_description">Request jadwal baru</string>
+    <string name="schedule_submit">Ajukan Request</string>
+    <string name="schedule_status_pending">Menunggu</string>
+    <string name="schedule_status_approved">Disetujui</string>
+    <string name="schedule_status_rejected">Ditolak</string>
+    <string name="schedule_no_requests">Belum ada request</string>
+    <string name="schedule_no_requests_hint">Tekan + untuk mengajukan jadwal</string>
+    <string name="schedule_my_requests">Request Saya</string>
+    <string name="schedule_loading_directory">Memuat data…</string>
+    <string name="schedule_days_mon">Sen</string>
+    <string name="schedule_days_tue">Sel</string>
+    <string name="schedule_days_wed">Rab</string>
+    <string name="schedule_days_thu">Kam</string>
+    <string name="schedule_days_fri">Jum</string>
+    <string name="schedule_days_sat">Sab</string>
+    <string name="schedule_days_sun">Min</string>
+
+    <!-- Profile -->
+    <string name="profile_edit">Edit</string>
+    <string name="profile_change_avatar">Ubah foto</string>
+    <string name="profile_save">Simpan perubahan</string>
+    <string name="profile_field_full_name">Nama lengkap</string>
+    <string name="profile_field_email">Email</string>
+    <string name="profile_field_phone">Telepon</string>
+    <string name="profile_field_bio">Bio</string>
+    <string name="profile_save_success">Profil tersimpan! 🎉</string>
+    <string name="profile_my_profile">Profil Saya</string>
+    <string name="profile_achievements">Prestasi</string>
+    <string name="profile_section_account">Informasi Akun</string>
+    <string name="profile_section_security">Keamanan</string>
+    <string name="profile_password_label">Password</string>
+    <string name="profile_password_subtitle">Ubah password secara berkala</string>
+    <string name="profile_change_password">Ubah</string>
+    <string name="profile_change_password_title">Ubah Password</string>
+    <string name="profile_current_password">Password Saat Ini</string>
+    <string name="profile_new_password">Password Baru</string>
+    <string name="profile_confirm_new_password">Konfirmasi Password Baru</string>
+    <string name="profile_password_mismatch">Password tidak cocok</string>
+    <string name="profile_password_changed">Password berhasil diubah</string>
+    <string name="profile_save_in_progress">Menyimpan…</string>
+    <string name="profile_back">Kembali</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Pengaturan</string>
+    <string name="settings_theme_light">Terang</string>
+    <string name="settings_theme_dark">Gelap</string>
+    <string name="settings_theme_amoled">AMOLED</string>
+    <string name="settings_sync">Sinkronisasi data</string>
+    <plurals name="settings_pending_count">
+        <item quantity="other">%1$d entri menunggu</item>
+    </plurals>
+    <string name="settings_sync_now">Sinkron sekarang</string>
+    <string name="settings_sync_now_subtitle">Kirim data pending ke server</string>
+    <string name="settings_delete_confirm_title">Hapus semua data?</string>
+    <string name="settings_delete_confirm_body">Ini akan menghapus semua log tersimpan dan mengeluarkan Anda. Tidak dapat dibatalkan.</string>
+    <string name="settings_delete_confirm_yes">Hapus</string>
+    <string name="settings_delete_confirm_no">Batal</string>
+    <string name="settings_delete_success_toast">Semua data lokal berhasil dihapus</string>
+    <string name="settings_logout_confirm_title">Keluar?</string>
+    <string name="settings_logout_confirm_body">Anda dapat masuk lagi kapan saja.</string>
+    <string name="settings_logout_confirm_yes">Keluar</string>
+    <string name="settings_logout_confirm_no">Batal</string>
+    <string name="settings_server_data_note">Data Anda di server tidak berubah.</string>
+    <string name="settings_default_user_name">Mahasiswa</string>
+    <string name="settings_edit_profile_cd">Edit profil</string>
+    <string name="settings_section_sync">Sinkronisasi</string>
+    <string name="settings_section_appearance">Tampilan</string>
+    <string name="settings_section_permissions">Izin Sistem</string>
+    <string name="settings_section_privacy">Privasi</string>
+    <string name="settings_section_about">Tentang</string>
+    <string name="settings_pending_logs">Pending Logs</string>
+    <string name="settings_mqtt_connection">Koneksi MQTT</string>
+    <string name="settings_mqtt_subtitle">Status koneksi real-time</string>
+    <string name="settings_mqtt_idle">Terhubung · belum ada event</string>
+    <string name="settings_mqtt_log_received">Aktif · log diterima</string>
+    <string name="settings_mqtt_training_completed">Aktif · training selesai</string>
+    <string name="settings_usage_access">Usage Access</string>
+    <string name="settings_usage_access_subtitle">Akses statistik penggunaan aplikasi</string>
+    <string name="settings_location">Lokasi</string>
+    <string name="settings_location_subtitle">Deteksi proximity ke kampus</string>
+    <string name="settings_notification_status">Notifikasi</string>
+    <string name="settings_notification_subtitle">Status monitoring aktif</string>
+    <string name="settings_permission_granted">Diberikan</string>
+    <string name="settings_permission_tap_to_grant">Ketuk untuk berikan</string>
+    <string name="settings_biometric">Verifikasi Biometrik</string>
+    <string name="settings_biometric_subtitle">Wajib verifikasi saat buka aplikasi</string>
+    <string name="settings_biometric_enroll_required">Aktifkan sidik jari atau kunci layar di Settings sistem terlebih dahulu</string>
+    <string name="settings_biometric_verify_failed">Verifikasi biometrik gagal. Silakan coba lagi.</string>
+    <string name="biometric_verify_title">Konfirmasi identitas Anda</string>
+    <string name="biometric_verify_settings_subtitle">Verifikasi sidik jari atau PIN untuk mengaktifkan login biometrik</string>
+    <string name="settings_version">Versi</string>
+    <string name="settings_version_value">v1.0.0</string>
+    <string name="settings_privacy_policy">Kebijakan Privasi</string>
+    <string name="settings_privacy_policy_subtitle">Baca kebijakan privasi lengkap</string>
+    <string name="settings_delete_all">Hapus Semua Data</string>
+    <string name="settings_delete_all_subtitle">Hapus data lokal dari perangkat</string>
+    <string name="settings_logout_button">Keluar</string>
+    <string name="settings_home">Kembali ke Beranda</string>
+
+    <!-- Permission onboarding -->
+    <string name="permission_step_terms">Syarat</string>
+    <string name="permission_step_permissions">Izinkan</string>
+    <string name="permission_header_title">Izinkan Akses di HP</string>
+    <string name="permission_header_subtitle">Ini biar aplikasi bisa jalan dengan benar</string>
+    <string name="permission_all_done">Semua izin sudah diberikan</string>
+    <string name="permission_pending">Izin yang belum</string>
+    <plurals name="permission_progress">
+        <item quantity="other">%1$d dari %2$d izin penting sudah aktif</item>
+    </plurals>
+    <string name="permission_tap_each">Ketuk setiap izin di bawah untuk memberikan akses</string>
+    <string name="permission_required_badge">WAJIB</string>
+    <string name="permission_battery_title">Background Usage (Real-time)</string>
+    <string name="permission_battery_desc">Setel ke "Optimized" agar aplikasi bisa update real-time saat jam kuliah. Hemat baterai, monitoring cuma jalan di jam aktif dan sinkronisasi di malam hari (22.00–04.00).</string>
+    <string name="permission_battery_tap">Ketuk untuk buka setelan baterai</string>
+    <string name="permission_safety_title">Aman, Kok!</string>
+    <string name="permission_safety_desc">Semua izin cuma dipakai buat memantau kebiasaan belajar kamu. Data dienkripsi dan tidak dibagikan ke pihak lain.</string>
+    <string name="permission_button_done">Selesai, Lanjut!</string>
+    <string name="permission_button_continue">Lanjut Aja Dulu</string>
+    <string name="permission_skip_hint">Yang belum diberikan bisa disetel nanti di menu Profil > Setelan</string>
+    <string name="permission_usage_title">Akses Penggunaan Aplikasi</string>
+    <string name="permission_usage_desc">Biar aplikasi tahu kamu buka HP buat apa. Kami cek cuma aplikasi sosmed dan game aja.</string>
+    <string name="permission_usage_how">Setel ke "Optimized", Setelan HP > Usage Access > MonitorUNG > Optimized</string>
+    <string name="permission_location_title">Lokasi (Perkiraan)</string>
+    <string name="permission_location_desc_human">Cek apakah kamu beneran di kampus pas jam kuliah. Tidak pakai GPS akurat.</string>
+    <string name="permission_location_how">Popup Android, pilih \'Izinkan\'</string>
+    <string name="permission_notification_title">Notifikasi</string>
+    <string name="permission_notification_desc_human">Kasih tau kamu kalau jam kuliah mau mulai atau ada info penting dari kampus.</string>
+    <string name="permission_notification_how">Popup Android, pilih \'Izinkan\'</string>
+
+    <!-- Terms onboarding -->
+    <string name="terms_step_terms">Syarat</string>
+    <string name="terms_step_permissions">Izinkan</string>
+    <string name="terms_header_title">Baca Dulu, Ya!</string>
+    <string name="terms_header_subtitle">Kami butuh persetujuan kamu sebelum mulai</string>
+    <string name="terms_scroll_hint">Scroll ke bawah untuk baca semuanya</string>
+    <string name="terms_q1_title">Ini Aplikasi Apa?</string>
+    <string name="terms_q1_body">Monitor UNG adalah aplikasi untuk bantu dosen dan admin kampus tahu kebiasaan belajar kamu. Tujuannya biar pengajaran di UNG bisa makin baik.</string>
+    <string name="terms_q2_title">Data Apa yang Dicatat?</string>
+    <string name="terms_q2_bullet_1">Berapa lama kamu pakai HP tiap hari</string>
+    <string name="terms_q2_bullet_2">Buka aplikasi apa aja (sosmed, game, dll)</string>
+    <string name="terms_q2_bullet_3">Berapa kali buka-tutup HP</string>
+    <string name="terms_q2_bullet_4">Kamu ada di kampus atau nggak saat jam kuliah</string>
+    <string name="terms_q3_title">Lokasi Dicatat?</string>
+    <string name="terms_q3_body">Cuma lokasi kasar (±100 meter), bukan lokasi GPS akurat. Kami nggak tahu kamu ada di ruangan mana. Fungsinya cuma memastikan kamu beneran di area kampus pas jam kuliah.</string>
+    <string name="terms_q4_title">Aman Nggak Data Kami?</string>
+    <string name="terms_q4_bullet_1">Data di HP kamu dienkripsi (kunci khusus)</string>
+    <string name="terms_q4_bullet_2">Kirim ke server pakai jalur terenkripsi (HTTPS)</string>
+    <string name="terms_q4_bullet_3">Cuma admin kampus yang bisa lihat</string>
+    <string name="terms_q4_bullet_4">Nggak dijual atau diberikan ke siapa pun</string>
+    <string name="terms_q5_title">Kamu Punya Hak</string>
+    <string name="terms_q5_bullet_1">Tahu data apa aja yang dikumpulkan</string>
+    <string name="terms_q5_bullet_2">Minta hapus data kamu kapan aja</string>
+    <string name="terms_q5_bullet_3">Matikan fitur pemantauan lewat menu Setelan</string>
+    <string name="terms_q5_bullet_4">Tanya ke admin kampus kalau ada yang bingung</string>
+    <string name="terms_warning_title">Kalau Pilih Tidak Setuju</string>
+    <string name="terms_warning_body">Fitur pemantauan nggak akan jalan dan data kamu nggak dikirim ke server kampus. Tapi kamu tetap bisa pakai aplikasi ini.</string>
+    <string name="terms_checkbox_ready">Saya sudah baca dan saya setuju</string>
+    <string name="terms_checkbox_wait">Baca dulu sampai bawah, baru centang di sini</string>
+    <string name="terms_decline_button">Tidak, Terima Kasih</string>
+    <string name="terms_accept_button">Ya, Saya Setuju</string>
+
+    <!-- Common -->
+    <string name="common_cancel">Batal</string>
+    <string name="common_save">Simpan</string>
+    <string name="common_skip">Lewati</string>
+    <!-- LoginScreen -->
+    <string name="login_app_subtitle">Universitas Negeri Gorontalo</string>
+    <string name="login_nim_label">NIM</string>
+    <string name="login_nim_placeholder">NIM atau email, mis. 123456789 atau nama@ung.ac.id</string>
+    <string name="login_auto_login">Masuk otomatis…</string>
+    <string name="login_password_toggle_show">Tampilkan</string>
+    <string name="login_password_toggle_hide">Sembunyikan</string>
+    <string name="login_register">Daftar Akun</string>
+    <string name="login_download_app">Unduh Aplikasi</string>
+    <string name="login_privacy_note">Dengan masuk, Anda menyetujui kebijakan privasi aplikasi ini. Data penggunaan aplikasi dan lokasi akan dikumpulkan untuk keperluan monitoring akademik.</string>
+
+    <!-- Gamified UI -->
+    <string name="level_badge">Level %1$d</string>
+    <string name="level_xp_label">%1$d XP</string>
+    <string name="level_xp_to_next">%1$d XP ke level berikutnya</string>
+    <string name="achievement_locked">Terkunci</string>
+    <string name="achievement_first_login">Masuk Pertama</string>
+    <string name="achievement_first_sync">Sinkron Pertama</string>
+    <string name="achievement_privacy">Privasi</string>
+    <plurals name="streak_days">
+        <item quantity="other">%1$d hari beruntun</item>
+    </plurals>
+    <string name="history_achievement_3day">3 hari</string>
+    <string name="history_achievement_7day">7 hari</string>
+    <string name="history_achievement_14day">14 hari</string>
+    <string name="challenge_done">Selesai!</string>
+    <string name="challenge_completed_label">Tantangan selesai!</string>
+    <string name="challenge_progress_label">%1$d%% selesai</string>
+    <string name="challenge_reduce_title">Kurangi Screen Time</string>
+    <string name="challenge_reduce_desc">Kurangi screen time 30 menit hari ini</string>
+    <string name="challenge_nososmed_title">Tanpa Sosmed</string>
+    <string name="challenge_nososmed_desc">Hari ini tanpa sosmed</string>
+    <string name="challenge_early_title">Ayo Pagi</string>
+    <string name="challenge_early_desc">Mulai belajar sebelum jam 9</string>
+    <string name="challenge_streak_title">Jaga Streak</string>
+    <string name="challenge_streak_desc">Tetap fokus hari ini untuk jaga streak</string>
+    <!-- New Home Cards -->
+    <string name="home_schedule_card_title">Jadwal Hari Ini</string>
+    <string name="home_schedule_no_class">Tidak ada kelas hari ini</string>
+    <string name="home_schedule_room">Ruang %1$s</string>
+    <string name="home_30day_summary_title">Ringkasan 30 Hari</string>
+    <plurals name="home_30day_active_days">
+        <item quantity="other">%1$d hari aktif</item>
+    </plurals>
+    <string name="home_today_label">HARI INI</string>
+    <string name="home_30day_label">30 HARI</string>
+    <string name="home_today_title">Penggunaan hari ini</string>
+    <string name="home_class_usage_title">Penggunaan saat jadwal</string>
+    <string name="home_class_usage_scheduled">Saat kuliah</string>
+    <string name="home_class_usage_outside">Di luar kuliah</string>
+    <string name="home_class_usage_absent">Ada jadwal, tidak terdeteksi di kampus</string>
+    <plurals name="home_class_usage_classes">
+        <item quantity="other">%1$d jadwal · %2$d hadir</item>
+    </plurals>
+    <string name="home_30day_avg">rerata/hari</string>
+    <string name="home_location_card_title">Pemeriksaan lokasi terakhir</string>
+    <string name="home_location_never">Belum ada pemeriksaan lokasi</string>
+    <string name="home_location_on_campus">Di dalam kampus</string>
+    <string name="home_location_off_campus">Di luar kampus</string>
+    <string name="home_location_unknown">Lokasi tidak tersedia</string>
+    <string name="home_pending_entries_title">Entri Tertunda</string>
+    <string name="home_offline_label">Offline. Akses lokal maksimal 24 jam; data menunggu sinkronisasi malam atau manual.</string>
+    <string name="home_quick_action_card_title">Aksi Cepat</string>
+    <string name="biometric_unavailable">Verifikasi perangkat tidak tersedia. Coba lagi atau masuk menggunakan akun Anda.</string>
+    <string name="biometric_cancelled">Verifikasi dibatalkan. Data tetap terkunci; ketuk Verifikasi untuk mencoba lagi.</string>
+    <string name="biometric_waiting">Menunggu verifikasi…</string>
+    <string name="biometric_local_notice">Verifikasi dilakukan oleh perangkat. Akses offline berlaku hingga 24 jam sejak sesi terakhir divalidasi server.</string>
+</resources>
