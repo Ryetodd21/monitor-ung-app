@@ -325,4 +325,5 @@
     <string name="biometric_cancelled">Verifikasi dibatalkan. Data tetap terkunci; ketuk Verifikasi untuk mencoba lagi.</string>
     <string name="biometric_waiting">Menunggu verifikasi…</string>
     <string name="biometric_local_notice">Verifikasi dilakukan oleh perangkat. Akses offline berlaku hingga 24 jam sejak sesi terakhir divalidasi server.</string>
+    <string name="login_signing_in">Sedang masuk…</string>
 </resources>

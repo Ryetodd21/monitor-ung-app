@@ -118,7 +118,7 @@ fun AppNavigation(
                     onItemSelected = { route ->
                         val targetIdx = bottomNavItems.indexOfFirst { it.route == route }
                         if (targetIdx >= 0 && targetIdx != pagerState.currentPage) {
-                            scope.launch { pagerState.animateScrollToPage(targetIdx) }
+                            scope.launch { pagerState.animateScrollToPage(targetIdx, animationSpec = tween(280)) }
                         }
                     }
                 )
@@ -243,7 +243,7 @@ private fun SwipeableBottomNav(
                     onHomeClick = {
                         // Tutup Profile (kalau terbuka) lalu scroll pager ke tab Home.
                         onDismissProfile()
-                        scope.launch { pagerState.animateScrollToPage(0) }
+                        scope.launch { pagerState.animateScrollToPage(0, animationSpec = tween(240)) }
                     },
                 )
             }

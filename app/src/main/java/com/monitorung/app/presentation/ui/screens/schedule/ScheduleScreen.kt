@@ -274,7 +274,7 @@ private fun ScheduleListTab(
                 text = stringResource(R.string.schedule_request_fab),
                 onClick = onRequestClick,
                 modifier = Modifier
-                    .height(52.dp)
+                    .heightIn(min = 52.dp)
                     .fillMaxWidth(),
                 enabled = true,
                 gradient = if (schedules.isEmpty()) Brush.horizontalGradient(GradientBlueTeal) else Brush.horizontalGradient(listOf(Color.Gray, Color.Gray)),
@@ -840,7 +840,7 @@ private fun ScheduleRequestBottomSheet(
                         description.ifEmpty { defaultDescription }
                     )
                 },
-                modifier = Modifier.fillMaxWidth().height(52.dp),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
                 enabled = !isSubmitting && (selectedSubjectId.isNotEmpty() || subjectNameRaw.isNotEmpty()),
                 cornerRadius = 12.dp,
                 containerColor = Blue600,

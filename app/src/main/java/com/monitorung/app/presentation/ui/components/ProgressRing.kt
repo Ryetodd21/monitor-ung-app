@@ -4,6 +4,7 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.progressSemantics
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -25,7 +26,7 @@ import androidx.compose.ui.unit.dp
  * Features:
  * - Gradient stroke (primary → secondary)
  * - Rounded stroke caps (softer ends)
- * - Smooth 900ms tween animation
+ * - Smooth 420ms tween animation
  * - Configurable size, stroke width, and colors
  */
 @Composable
@@ -43,11 +44,11 @@ fun ProgressRing(
     val coerced = progress.coerceIn(0f, 1f)
     val animated by animateFloatAsState(
         targetValue = coerced,
-        animationSpec = tween(durationMillis = 900, easing = FastOutSlowInEasing),
+        animationSpec = tween(durationMillis = 420, easing = FastOutSlowInEasing),
         label = "ring_progress",
     )
 
-    Canvas(modifier = modifier.size(size)) {
+    Canvas(modifier = modifier.size(size).progressSemantics(coerced)) {
         val diameterPx = this.size.minDimension
         val stroke = strokeWidth.toPx()
         val arcSize = Size(diameterPx - stroke, diameterPx - stroke)

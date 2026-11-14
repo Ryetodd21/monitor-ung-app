@@ -1,35 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <!-- Monitor UNG logo: Stylized "M" with 3 horizontal chart bars
-         White on Blue-Teal gradient. PaperCard aesthetic: clean, geometric,
-         playful monitoring theme. Fits in adaptive icon safe zone 18-90. -->
-    <group
-        android:scaleX="0.35"
-        android:scaleY="0.35"
-        android:pivotX="54"
-        android:pivotY="54"
-        android:translateX="0"
-        android:translateY="0">
-        <!-- "M" letterform — thick strokes, clean geometric -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M55,150 L55,50 L85,80 L115,50 L115,150 L100,150 L100,85 L85,100 L70,85 L70,150 Z"/>
-        <!-- 3 horizontal chart bars — monitoring / analytics aesthetic -->
-        <!-- Bar 1: low (between legs) -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M60,125 L148,125 L148,130 L60,130 Z"/>
-        <!-- Bar 2: medium (between leg and diagonal) -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M60,95 L148,95 L148,100 L60,100 Z"/>
-        <!-- Bar 3: tall (above diagonal peak — key metric) -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M60,60 L148,60 L148,65 L60,65 Z"/>
-    </group>
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Stacked study cards, contained within the adaptive icon safe circle. -->
+    <path android:fillColor="#ADC8FF"
+        android:pathData="M40,28L73,32Q79,33 78,39L74,74Q73,80 67,79L34,75Q28,74 29,68L33,34Q34,27 40,28Z" />
+    <path android:fillColor="#143C91" android:fillAlpha="0.25"
+        android:pathData="M36,34H69Q76,34 76,41V76Q76,83 69,83H36Q29,83 29,76V41Q29,34 36,34Z" />
+    <path android:fillColor="#FFFEFA"
+        android:pathData="M35,31H68Q75,31 75,38V73Q75,80 68,80H35Q28,80 28,73V38Q28,31 35,31Z" />
+    <path android:fillColor="#D9E4F7"
+        android:pathData="M39,41H60Q62,41 62,43Q62,45 60,45H39Q37,45 37,43Q37,41 39,41Z" />
+    <path android:fillColor="#2454C6"
+        android:pathData="M39,59H41Q43,59 43,61V68Q43,70 41,70H39Q37,70 37,68V61Q37,59 39,59ZM49,53H51Q53,53 53,55V68Q53,70 51,70H49Q47,70 47,68V55Q47,53 49,53ZM59,57H61Q63,57 63,59V68Q63,70 61,70H59Q57,70 57,68V59Q57,57 59,57Z" />
+    <path android:fillColor="#0F766E"
+        android:pathData="M76,48A10,10 0,1 1,56,48A10,10 0,1 1,76,48Z" />
+    <path android:fillColor="#00000000" android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5" android:strokeLineCap="round" android:strokeLineJoin="round"
+        android:pathData="M61,48L64.5,51.5L71,45" />
 </vector>

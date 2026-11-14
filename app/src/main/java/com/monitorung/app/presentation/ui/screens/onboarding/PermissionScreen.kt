@@ -470,7 +470,7 @@ fun PermissionScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
+                    .heightIn(min = 52.dp),
                 cornerRadius = 14.dp,
                 enabled = allDone,
             )

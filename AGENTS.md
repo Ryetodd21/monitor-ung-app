@@ -8,7 +8,7 @@ Android adalah aplikasi mahasiswa: masuk, memberikan persetujuan/izin, melihat j
 
 | Bagian | Konfigurasi sumber |
 | --- | --- |
-| Identitas | Namespace/applicationId `com.monitorung.app`; versionCode 30, versionName 0.29.1, rilis 2026-11-14. |
+| Identitas | Namespace/applicationId `com.monitorung.app`; versionCode 31, versionName 0.30.0, build 2026-11-14; distribusi publik terakhir tetap 0.29.1. |
 | Toolchain | Kotlin/Compose compiler 2.4.21, AGP 9.5.1 (Kotlin Android bawaan), KSP 2.3.13, Gradle wrapper 9.9.1, Java/JVM 17. |
 | Android | minSdk 26, targetSdk/compileSdk 37. ABI arm64-v8a, armeabi-v7a, dan x86_64; split APK dan universal APK. |
 | UI | Jetpack Compose BOM 2026.09.00, Material 3, Navigation Compose, window size classes, biometric. |
@@ -109,9 +109,9 @@ Gunakan CoroutineScope milik instance dengan SupervisorJob dan cleanup, bukan Gl
 
 Visual Android adalah PaperCard yang lembut dan playful, tetap berorientasi informasi mahasiswa. Jangan mengganti menjadi dashboard web editorial atau mengembalikan glassmorphism lama.
 
-- `Theme.kt`: primary biru, semantic teal/amber/fuchsia, palette chart dan pastel, spacing/radius bersama. Gunakan MaterialTheme dan token existing, bukan warna literal per layar.
+- `Theme.kt`: primary biru #2454C6, canvas paper hangat #F6F5F1, semantic teal/amber/fuchsia, palette chart dan pastel, spacing/radius bersama. Gunakan MaterialTheme dan token existing, bukan warna literal per layar.
 - ThemeVariant aktif `LIGHT`, `DARK`, `AMOLED`; dynamic color default false. `Typography.kt` memakai FontFamily.Default dengan hirarki 32/28/24 untuk headline, 16/14/12 untuk body. Tidak menggunakan empat font web.
-- `PaperCard`: Surface theme-aware, border 1 dp, radius `RadiusPlayful` 28 dp, shadow elevation 6 dp. Warna/fill primitive lain mengikuti theme.
+- `PaperCard`: Surface theme-aware, border 1 dp, radius `RadiusPlayful` 24 dp, shadow elevation 1 dp; padding positif termasuk 8 dp diterapkan. Warna/fill primitive lain mengikuti theme.
 - Gunakan PaperPill/SectionBadge, SpringButton, BubbleNavBar, SkeletonShimmer, PullToRefreshWrapper, ProgressRing, AnimatedCounter dan feedback haptic yang sudah ada.
 - Ada komponen gamifikasi seperti streak, achievement, challenge dan confetti. Keberadaan file bukan bukti semua komponen terpasang di layar; periksa pemanggil sebelum menambah penggunaan.
 - Phone/tablet memakai WindowSize dan window size classes; resource ukuran/grid XML lama yang tidak dipakai telah dihapus. Pertahankan inset edge-to-edge, ruang navigasi, layout layar sempit dan pembesaran font.
@@ -184,3 +184,13 @@ device_id pada batch HTTP kini UUID acak per instalasi di filesDir melalui Atomi
 Tes baru: BackupRulesTest (unit), InstallationIdTest dan EncryptedStorageTest (instrumentasi). Instrumentasi memeriksa UUID stabil, pembukaan ulang data terenkripsi dengan kunci biner, serta preferensi terenkripsi. Belum ada perangkat/emulator terhubung; kompilasi instrumentasi bukan bukti tes runtime atau migrasi database pengguna nyata. Upgrade target SDK membutuhkan pemeriksaan monitoring/background, biometrik, dan tampilan pada perangkat sebelum distribusi production.
 
 Verifikasi akhir perbaikan warning: lintDevDebug 0 error/0 warning (baseline 231 warning), 25 unit test lulus, assembleDevDebug dan assembleDevRelease dengan R8 berhasil, compileDevDebugAndroidTestKotlin berhasil. APK universal DevRelease lulus apksigner verify, zipalign -P 16 dan pemeriksaan ELF seluruh library 64-bit. Log: /tmp/monitor-ung-warning-final.log; laporan: app/build/reports/lint-results-devDebug.html. Gradle wrapper diperbarui melalui task wrapper; checksum distribusi dipertahankan. Tidak menonaktifkan aturan lint atau membuat baseline pengecualian. Compiler masih mengeluarkan 9 deprecation unik di SecurePrefs untuk API enkripsi legacy; warning merger manifest unit-test terkait penghapusan WorkManagerInitializer dan informasi stripping native juga terpisah dari lint. APK belum didistribusikan; belum menjalankan instrumentasi pada perangkat.
+
+## PaperCard dan APK 0.30.0 (31), 2026-11-14
+
+Pengguna memilih memperhalus PaperCard existing. Ikon launcher baru vector/adaptive berupa kartu belajar bertumpuk, grafik dan centang; layer monochrome terpisah. Login/splash memakai foreground ikon yang sama. Surface lebih hangat, border ringan, CTA biru/teal dengan kontras lebih kuat; angka metrik memakai onSurface. Ringkasan penggunaan dipindahkan sebelum gamifikasi tanpa mengubah perhitungan data.
+
+StaggeredEntrance selalu menyusun layout, lalu fade/geser 12dp; delay dibatasi 120ms dalam tween Compose agar mengikuti skala animasi sistem. Tombol memakai primitive Button untuk ripple/disabled semantics dan target minimal 48dp, spring kritis hanya pada isi (skala 0.98). Tab tidak membesar; selectable Role.Tab, label 12sp dan badge bersemantik. GradientCard mengikuti tinggi konten, wash 12% di atas surface tema, tanpa aksi klik palsu. Counter pertama menampilkan nilai nyata, perubahan berikutnya 320ms tanpa overshoot; ring 420ms dengan progress semantics. Login menghapus floating/confetti serta penundaan navigasi, mempertahankan label saat loading, live-region error, safe area/IME dan lebar maksimum 480dp. CTA tinggi minimum menggantikan tinggi tetap agar font besar dapat membesar.
+
+Build prodRelease signed universal/arm64-v8a/armeabi-v7a/x86_64 tersedia lokal di `/home/terio-op/Downloads/MonitorUNG-0.30.0/`, bersama SHA256SUMS.txt dan icon-preview.png. Belum dipublikasikan ke website/VPS. Signer identik 0.29.1, non-debuggable, applicationId/version dan zipalign 16 KB lulus. Pin TLS cocok dengan rantai domain publik. 25 unit test prodDebug lulus; lintProdRelease 0 temuan; 7 tes baru PaperCardUiTest dikompilasi melalui compileDevDebugAndroidTestKotlin, belum dieksekusi. Tes mencakup padding, reservasi layout animasi, wrapping gradient/non-clickable, nilai counter awal, disabled button, navigasi dan kontras tiga tema. Log `/tmp/monitorung-paper31-final.log`.
+
+Pengguna akan menguji APK sendiri dan meminta image emulator dihapus. Unduhan image Android 36 dibatalkan/dihapus, paket emulator yang baru dipasang juga dihapus. Tidak ada klaim pemeriksaan runtime UI/TalkBack/font besar/animasi pada perangkat. Keystore, database lokal, izin, API, koleksi/sinkronisasi dan logic monitoring tidak diubah.

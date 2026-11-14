@@ -60,7 +60,7 @@ fun HomeScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Header — title only (theme switcher moved to Settings)
         Row(
@@ -107,19 +107,24 @@ fun HomeScreen(
             }
         }
 
-        // Level progress card — derived from screen time milestones
+        // Screen time card — today's 4 metrics in a dedicated card
         StaggeredEntrance(index = 0, modifier = Modifier.fillMaxWidth()) {
-            val streak = computeStreak(uiState.recentActivity)
-            val level = computeLevel(uiState.todayUsage?.totalScreenTimeMinutes ?: 0)
-            val xp = computeXp(uiState.todayUsage?.totalScreenTimeMinutes ?: 0)
-            val xpMax = xpPerLevel(level)
-            LevelProgressCard(
-                level = level,
-                currentXp = xp,
-                xpToNextLevel = xpMax,
-                streakDays = streak,
-                modifier = Modifier.fillMaxWidth(),
-            )
+            PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
+                when {
+                    uiState.isLoading && uiState.todayUsage == null -> {
+                        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            SkeletonCard(modifier = Modifier.fillMaxWidth(), baseColor = null)
+                            SkeletonCard(modifier = Modifier.fillMaxWidth(0.7f), baseColor = null)
+                        }
+                    }
+                    uiState.todayUsage != null -> {
+                        UsageSummaryContent(usage = uiState.todayUsage!!)
+                    }
+                    else -> {
+                        EmptyUsageContent()
+                    }
+                }
+            }
         }
 
         // Schedule card — today's active / upcoming class
@@ -142,52 +147,22 @@ fun HomeScreen(
             }
         }
 
-        // Daily challenge widget
-        StaggeredEntrance(index = 3, modifier = Modifier.fillMaxWidth()) {
-            DailyChallengeWidget(
-                challenge = DailyChallengeType.REDUCE_SCREEN_TIME,
-                progress = computeChallengeProgress(uiState.todayUsage?.totalScreenTimeMinutes ?: 0),
-                isCompleted = (uiState.todayUsage?.totalScreenTimeMinutes ?: 999) < 60,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
-
-        // Screen time card — today's 4 metrics in a dedicated card
-        StaggeredEntrance(index = 4, modifier = Modifier.fillMaxWidth()) {
-            PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
-                when {
-                    uiState.isLoading && uiState.todayUsage == null -> {
-                        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            SkeletonCard(modifier = Modifier.fillMaxWidth(), baseColor = null)
-                            SkeletonCard(modifier = Modifier.fillMaxWidth(0.7f), baseColor = null)
-                        }
-                    }
-                    uiState.todayUsage != null -> {
-                        UsageSummaryContent(usage = uiState.todayUsage!!)
-                    }
-                    else -> {
-                        EmptyUsageContent()
-                    }
-                }
-            }
-        }
-
         // Class-time split: derived locally from usage events and geofence checks.
-        StaggeredEntrance(index = 5, modifier = Modifier.fillMaxWidth()) {
+        StaggeredEntrance(index = 3, modifier = Modifier.fillMaxWidth()) {
             PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
                 ClassUsageContent(uiState.dailyUsageBreakdown)
             }
         }
 
         // 30-day summary card — longer-term trends
-        StaggeredEntrance(index = 6, modifier = Modifier.fillMaxWidth()) {
+        StaggeredEntrance(index = 4, modifier = Modifier.fillMaxWidth()) {
             PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
                 ThirtyDaySummaryContent(aggregate = uiState.thirtyDayAggregate)
             }
         }
 
         // Pending entries card — prominent sync queue indicator
-        StaggeredEntrance(index = 6, modifier = Modifier.fillMaxWidth()) {
+        StaggeredEntrance(index = 5, modifier = Modifier.fillMaxWidth()) {
             PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
                 PendingEntriesContent(
                     pendingCount = uiState.syncState.pendingCount,
@@ -198,14 +173,39 @@ fun HomeScreen(
             }
         }
 
-        // Streak indicator
+        // Level progress card — derived from screen time milestones
+        StaggeredEntrance(index = 6, modifier = Modifier.fillMaxWidth()) {
+            val streak = computeStreak(uiState.recentActivity)
+            val level = computeLevel(uiState.todayUsage?.totalScreenTimeMinutes ?: 0)
+            val xp = computeXp(uiState.todayUsage?.totalScreenTimeMinutes ?: 0)
+            val xpMax = xpPerLevel(level)
+            LevelProgressCard(
+                level = level,
+                currentXp = xp,
+                xpToNextLevel = xpMax,
+                streakDays = streak,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+
+        // Daily challenge widget
         StaggeredEntrance(index = 7, modifier = Modifier.fillMaxWidth()) {
+            DailyChallengeWidget(
+                challenge = DailyChallengeType.REDUCE_SCREEN_TIME,
+                progress = computeChallengeProgress(uiState.todayUsage?.totalScreenTimeMinutes ?: 0),
+                isCompleted = (uiState.todayUsage?.totalScreenTimeMinutes ?: 999) < 60,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+
+        // Streak indicator
+        StaggeredEntrance(index = 8, modifier = Modifier.fillMaxWidth()) {
             StreakIndicator(streakDays = computeStreak(uiState.recentActivity))
         }
 
         // Aktivitas 3 hari terakhir
         if (uiState.recentActivity.isNotEmpty()) {
-            StaggeredEntrance(index = 8, modifier = Modifier.fillMaxWidth()) {
+            StaggeredEntrance(index = 9, modifier = Modifier.fillMaxWidth()) {
                 PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
                     RecentActivityContent(recentActivity = uiState.recentActivity)
                 }
@@ -213,7 +213,7 @@ fun HomeScreen(
         }
 
         // Quick actions
-        StaggeredEntrance(index = 9, modifier = Modifier.fillMaxWidth()) {
+        StaggeredEntrance(index = 10, modifier = Modifier.fillMaxWidth()) {
             PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
                 QuickActionsContent(
                     onCollectClick = { viewModel.collectUsage() },
@@ -570,15 +570,15 @@ private fun PlayfulMetricCard(
                     modifier = Modifier
                         .size(24.dp)
                         .clip(RoundedCornerShape(RadiusSoft))
-                        .background(Brush.linearGradient(gradient)),
+                        .background(MaterialTheme.colorScheme.surface),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(14.dp))
+                    Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(16.dp))
                 }
                 Text(text = label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = tint)
+            Text(text = value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
         }
     }
 }

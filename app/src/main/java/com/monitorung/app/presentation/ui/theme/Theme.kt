@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 
 // ─── Primary Brand — Blue (Trust, Calm, Academic) ───────────────────────────────
-val PrimaryBlue      = Color(0xFF3B82F6)  // #3B82F6
+val PrimaryBlue      = Color(0xFF2454C6)  // readable primary on paper
 val PrimaryBlueDark  = Color(0xFF2563EB)  // #2563EB
 val PrimaryBlueLight = Color(0xFFDBEAFE)  // #DBEAFE
 
@@ -29,12 +29,12 @@ val SecondaryIndigo  = Color(0xFF6366F1)  // #6366F1
 val SecondaryLight   = Color(0xFFE0E7FF)  // #E0E7FF
 
 // ─── Surface — 3 modes ────────────────────────────────────────────────────────
-val SurfaceLight    = Color(0xFFF1F5F9)  // oklch 0.96 0.01 250 — soft gray-blue
+val SurfaceLight    = Color(0xFFF6F5F1)  // warm paper canvas
 val SurfaceDark     = Color(0xFF111827)  // oklch 0.08 0.02 250 — deep navy
 val AmoledBlack     = Color(0xFF000000)  // true black
 
 // ─── Surface elevated (cards, dialogs) ─────────────────────────────────────────
-val SurfaceElevatedLight = Color(0xFFFFFFFF)
+val SurfaceElevatedLight = Color(0xFFFFFEFA)
 val SurfaceElevatedDark  = Color(0xFF1F2937)
 val SurfaceElevatedAmoled = Color(0xFF0F0F0F)
 
@@ -72,7 +72,7 @@ val SuccessTealSoft   = Color(0xFFCCFBF1)  // teal-100, soft background tint
 val SuccessTealOnDark = Color(0xFF5EEAD4)  // teal-300, dark mode   → contrast 11.1:1 on #111827 ✓
 val SuccessSoftOnDark = Color(0xFF134E4A)  // teal-900, soft tint in dark mode
 
-val WarningAmber       = Color(0xFFD97706)  // amber-700  → contrast 4.6:1 on white ✓
+val WarningAmber       = Color(0xFF92400E)  // readable amber on paper and pale warning surfaces
 val WarningAmberSoft   = Color(0xFFFEF3C7)  // amber-100, soft background
 val WarningAmberOnDark = Color(0xFFFCD34D)  // amber-300  → contrast 10.4:1 on dark ✓
 
@@ -149,11 +149,11 @@ val SoftGlowColorDark   = Color(0x143B82F6)   // 8% primary blue
 val SoftShadowColorAmoled = Color(0x20000000)  // 12% black
 
 // ─── Gradient presets — for card overlays, progress bars, nav active states ──
-val GradientBlueTeal = listOf(Color(0xFF3B82F6), Color(0xFF14B8A6))
+val GradientBlueTeal = listOf(PrimaryBlueDark, SuccessTeal)
 val GradientAmberPeach = listOf(Color(0xFFF59E0B), Color(0xFFFB923C))
 val GradientPurplePink = listOf(Color(0xFF8B5CF6), Color(0xFFEC4899))
 val GradientSoftBlue = listOf(Color(0xFFBFDBFE), Color(0xFFDBEAFE))
-val GradientTealGreen = listOf(Color(0xFF14B8A6), Color(0xFF10B981))
+val GradientTealGreen = listOf(SuccessTeal, Color(0xFF047857))
 val GradientFuchsiaPurple = listOf(Color(0xFFA21CAF), Color(0xFF7C3AED))
 val GradientAmberGold = listOf(Color(0xFFF59E0B), Color(0xFFEAB308))
 
@@ -195,7 +195,7 @@ val RadiusM2   = 14.dp
 val RadiusL    = 16.dp
 val RadiusXL   = 20.dp
 val RadiusXXL  = 28.dp
-val RadiusPlayful = 28.dp
+val RadiusPlayful = 24.dp
 val RadiusBubble = 32.dp
 val RadiusPill = 50.dp
 
@@ -208,7 +208,7 @@ private val LightColorScheme = lightColorScheme(
     secondary          = SecondaryIndigo,
     onSecondary        = TextOnPrimary,
     secondaryContainer = SecondaryLight,
-    onSecondaryContainer = SecondaryIndigo,
+    onSecondaryContainer = Color(0xFF3730A3),
     tertiary           = ChartPurple,
     onTertiary        = TextOnPrimary,
     error              = ErrorFuchsia,
@@ -222,7 +222,7 @@ private val LightColorScheme = lightColorScheme(
     surfaceVariant    = Color(0xFFE2E8F0),
     onSurfaceVariant  = TextSecondaryLight,
     outline           = Color(0xFF94A3B8),
-    outlineVariant   = Color(0xFFCBD5E1),
+    outlineVariant   = Color(0xFFDDDCD5),
 )
 
 // ─── Dark Color Scheme ────────────────────────────────────────────────────────
@@ -311,7 +311,7 @@ fun MonitorUNGTheme(
         colorScheme = colorScheme,
         typography = Typography,
         shapes = Shapes(
-            extraSmall = RoundedCornerShape(RadiusPlayful),
+            extraSmall = RoundedCornerShape(RadiusS),
             small      = RoundedCornerShape(RadiusM),
             medium     = RoundedCornerShape(RadiusL),
             large      = RoundedCornerShape(RadiusPlayful),
