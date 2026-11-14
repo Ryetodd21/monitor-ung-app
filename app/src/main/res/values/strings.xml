@@ -265,8 +265,8 @@
     <string name="common_skip">Skip</string>
     <!-- LoginScreen -->
     <string name="login_app_subtitle">Universitas Negeri Gorontalo</string>
-    <string name="login_nim_label">NIM</string>
-    <string name="login_nim_placeholder">NIM or email, e.g. 123456789 or name@ung.ac.id</string>
+    <string name="login_nim_label">Username</string>
+    <string name="login_nim_placeholder">Username or email</string>
     <string name="login_auto_login">Auto login…</string>
     <string name="login_password_toggle_show">Show</string>
     <string name="login_password_toggle_hide">Hide</string>
