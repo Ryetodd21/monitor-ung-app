@@ -31,6 +31,8 @@ interface AuthRepository {
 
 interface ScheduleRepository {
     suspend fun fetchSchedules(): Result<List<Schedule>>
+    /** Every stored schedule for the signed-in student, ordered by day then start time. */
+    fun getAllSchedules(): Flow<List<Schedule>>
     fun getSchedulesByDay(dayOfWeek: Int): Flow<List<Schedule>>
     suspend fun getCurrentClass(): Schedule?
     suspend fun isCurrentlyInClass(): Boolean

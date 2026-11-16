@@ -17,9 +17,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.util.*
@@ -27,6 +29,24 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private val Context.configDataStore: DataStore<Preferences> by preferencesDataStore(name = "config_prefs")
+
+// Keyed by the caller's own studentId (users.id), never the server's students.id.
+internal fun ScheduleDto.toEntity(ownerId: String) = ScheduleEntity(
+    id = id,
+    studentId = ownerId,
+    dayOfWeek = dayOfWeek,
+    startTime = startTime,
+    endTime = endTime,
+    campusId = campusId,
+    room = room,
+    subjectNameRaw = subjectNameRaw,
+    lecturerNameRaw = lecturerNameRaw,
+    subjectId = subjectId,
+    lecturerId = lecturerId,
+    isActive = isActive,
+    subjectName = subjectName,
+    lecturerName = lecturerName
+)
 
 @Singleton
 class ScheduleRepositoryImpl @Inject constructor(
@@ -36,8 +56,10 @@ class ScheduleRepositoryImpl @Inject constructor(
     private val authRepository: AuthRepository
 ) : ScheduleRepository {
 
+    // getCurrentUser() hydrates from DataStore in the background, so a plain
+    // first() on a cold start returns null and the fetch silently fails.
     private suspend fun getStudentId(): String? =
-        authRepository.getCurrentUser().first()?.studentId
+        withTimeoutOrNull(5_000) { authRepository.getCurrentUser().filterNotNull().first() }?.studentId
 
     override suspend fun fetchSchedules(): Result<List<Schedule>> {
         return try {
@@ -47,7 +69,9 @@ class ScheduleRepositoryImpl @Inject constructor(
             val response = api.getSchedules("Bearer $token")
             if (response.isSuccessful) {
                 val dtos = response.body() ?: emptyList()
-                val entities = dtos.map { it.toEntity() }
+                // Room key must be the app's own studentId (users.id from login), not the
+                // server's students.id — reads and deletes filter by the auth studentId.
+                val entities = dtos.map { it.toEntity(studentId) }
                 // Atomic: scheduleDao().replaceAllForStudent runs deleteAll +
                 // insertAll inside a single Room @Transaction so a process kill
                 // between the two calls can no longer leave the user with zero
@@ -60,6 +84,16 @@ class ScheduleRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getAllSchedules(): Flow<List<Schedule>> {
+        return authRepository.getCurrentUser()
+            .map { it?.studentId ?: "" }
+            .distinctUntilChanged()
+            .flatMapLatest { studentId ->
+                scheduleDao.getAll(studentId).map { entities -> entities.map { it.toDomain() } }
+            }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -129,23 +163,6 @@ class ScheduleRepositoryImpl @Inject constructor(
     }.getOrNull()
 
     private fun ScheduleDto.toDomain() = Schedule(
-        id = id,
-        studentId = studentId,
-        dayOfWeek = dayOfWeek,
-        startTime = startTime,
-        endTime = endTime,
-        campusId = campusId,
-        room = room,
-        subjectNameRaw = subjectNameRaw,
-        lecturerNameRaw = lecturerNameRaw,
-        subjectId = subjectId,
-        lecturerId = lecturerId,
-        isActive = isActive,
-        subjectName = subjectName,
-        lecturerName = lecturerName
-    )
-
-    private fun ScheduleDto.toEntity() = ScheduleEntity(
         id = id,
         studentId = studentId,
         dayOfWeek = dayOfWeek,

@@ -180,8 +180,10 @@ class HistoryViewModel @Inject constructor(
 }
 
 data class ScheduleUiState(
+    /** Filtered rows for the selected day, or every row when [selectedDay] is 0. */
     val schedules: List<com.monitorung.app.domain.model.Schedule> = emptyList(),
-    val selectedDay: Int = 1,
+    /** 0 = show every day (default), 1..7 = ISO day filter. */
+    val selectedDay: Int = 0,
     val isLoading: Boolean = false,
     val error: String? = null,
     val subjects: List<SubjectItem> = emptyList(),
@@ -208,6 +210,9 @@ class ScheduleViewModel @Inject constructor(
     init {
         loadSchedules()
         loadMyRequests()
+        // Start unfiltered: a student must see their whole week without guessing
+        // which day chip holds it. The day row only narrows the list afterwards.
+        selectDay(0)
     }
 
     fun loadSchedules() {
@@ -216,6 +221,8 @@ class ScheduleViewModel @Inject constructor(
             scheduleRepository.fetchSchedules()
                 .onSuccess {
                     _uiState.update { it.copy(isLoading = false) }
+                    // Re-collect so a pull-to-refresh shows the new rows.
+                    selectDay(_uiState.value.selectedDay)
                 }
                 .onFailure { e ->
                     _uiState.update { it.copy(isLoading = false, error = e.message) }
@@ -223,11 +230,14 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
+    /** [day] 0 shows every schedule; 1..7 filters to that ISO day. */
     fun selectDay(day: Int) {
         _uiState.update { it.copy(selectedDay = day) }
         dayJob?.cancel()
         dayJob = viewModelScope.launch {
-            scheduleRepository.getSchedulesByDay(day).collect { schedules ->
+            val source = if (day == 0) scheduleRepository.getAllSchedules()
+                         else scheduleRepository.getSchedulesByDay(day)
+            source.collect { schedules ->
                 _uiState.update { it.copy(schedules = schedules) }
             }
         }

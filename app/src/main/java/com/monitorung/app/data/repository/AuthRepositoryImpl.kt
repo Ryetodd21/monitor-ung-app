@@ -310,8 +310,11 @@ class AuthRepositoryImpl @Inject constructor(
             val response = api.getMyProfile("Bearer $token")
             if (response.isSuccessful) {
                 val dto = response.body() ?: return Result.failure(Exception("Profile response body is empty"))
+                // studentId is users.id — the same value /auth/login returns and the
+                // key every Room query uses. Using dto.username re-keyed all rows on
+                // each auto-login and left them unreadable.
                 val user = User(
-                    studentId = dto.username,
+                    studentId = dto.id,
                     name = dto.fullName,
                     email = dto.email,
                     accessToken = token,
@@ -356,8 +359,11 @@ class AuthRepositoryImpl @Inject constructor(
             val response = api.updateMyProfile("Bearer $token", request)
             if (response.isSuccessful) {
                 val dto = response.body() ?: return Result.failure(Exception("Update profile response body is empty"))
+                // studentId is users.id — the same value /auth/login returns and the
+                // key every Room query uses. Using dto.username re-keyed all rows on
+                // each auto-login and left them unreadable.
                 val user = User(
-                    studentId = dto.username,
+                    studentId = dto.id,
                     name = dto.fullName,
                     email = dto.email,
                     accessToken = token,

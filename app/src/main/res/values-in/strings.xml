@@ -102,6 +102,7 @@
     <string name="schedule_no_requests_hint">Tekan + untuk mengajukan jadwal</string>
     <string name="schedule_my_requests">Request Saya</string>
     <string name="schedule_loading_directory">Memuat data…</string>
+    <string name="schedule_days_all">Semua</string>
     <string name="schedule_days_mon">Sen</string>
     <string name="schedule_days_tue">Sel</string>
     <string name="schedule_days_wed">Rab</string>

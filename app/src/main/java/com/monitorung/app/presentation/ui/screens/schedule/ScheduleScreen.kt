@@ -5,6 +5,8 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -146,6 +148,7 @@ fun ScheduleScreen(
                     text = {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text(stringResource(R.string.schedule_tab_schedule))
+                            // With a day filter on, the visible count is not the whole week.
                             if (uiState.schedules.isNotEmpty()) {
                                 Badge(containerColor = Blue600) { Text("${uiState.schedules.size}") }
                             }
@@ -340,10 +343,16 @@ private fun ApprovedScheduleCard(schedule: Schedule, onDelete: (String) -> Unit)
         )
     }
 
-    val now = LocalTime.now()
+    // WITA, matching the rest of the app. The day check matters now that the list
+    // shows every day: without it a Saturday class looked "active" on any weekday
+    // whose clock happened to fall inside the window.
+    val zone = java.time.ZoneId.of("Asia/Makassar")
+    val now = LocalTime.now(zone)
+    val today = java.time.LocalDate.now(zone).dayOfWeek.value
     val start = runCatching { LocalTime.parse(schedule.startTime) }.getOrNull()
     val end = runCatching { LocalTime.parse(schedule.endTime) }.getOrNull()
-    val isActive = start != null && end != null && now.isAfter(start) && now.isBefore(end)
+    val isActive = schedule.dayOfWeek == today && start != null && end != null &&
+        now.isAfter(start) && now.isBefore(end)
 
     if (isActive) {
         GradientCard(
@@ -364,6 +373,19 @@ private fun ApprovedScheduleCard(schedule: Schedule, onDelete: (String) -> Unit)
 }
 
 @Composable
+private fun dayLabel(day: Int): String = stringResource(
+    when (day) {
+        1 -> R.string.schedule_days_mon
+        2 -> R.string.schedule_days_tue
+        3 -> R.string.schedule_days_wed
+        4 -> R.string.schedule_days_thu
+        5 -> R.string.schedule_days_fri
+        6 -> R.string.schedule_days_sat
+        else -> R.string.schedule_days_sun
+    }
+)
+
+@Composable
 private fun ActiveScheduleCardContent(schedule: Schedule, isActive: Boolean, onDelete: () -> Unit) {
     Row(
         modifier = Modifier.padding(16.dp),
@@ -381,6 +403,12 @@ private fun ActiveScheduleCardContent(schedule: Schedule, isActive: Boolean, onD
                 text = schedule.endTime,
                 style = MaterialTheme.typography.labelSmall,
                 color = if (isActive) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            // The list is cross-day by default, so each card must name its day.
+            Text(
+                text = dayLabel(schedule.dayOfWeek),
+                style = MaterialTheme.typography.labelSmall,
+                color = if (isActive) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.primary
             )
             if (isActive) {
                 Spacer(modifier = Modifier.height(4.dp))
@@ -598,7 +626,9 @@ private fun DaySelector(
 ) {
     // Day labels follow the user's system locale — pulled from string resources so
     // Monday→Senin, Tuesday→Selasa, etc., automatically when the device is in Indonesian.
+    // 0 = no filter, so every scheduled day is visible on open.
     val days = listOf(
+        0 to stringResource(R.string.schedule_days_all),
         1 to stringResource(R.string.schedule_days_mon),
         2 to stringResource(R.string.schedule_days_tue),
         3 to stringResource(R.string.schedule_days_wed),
@@ -607,20 +637,24 @@ private fun DaySelector(
         6 to stringResource(R.string.schedule_days_sat),
         7 to stringResource(R.string.schedule_days_sun),
     )
-    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-        days.forEachIndexed { index, (day, label) ->
-            val isSelected = selectedDay == day
-            SegmentedButton(
-                selected = isSelected,
+    // Scrollable chips, not a segmented row: eight labels do not fit a phone
+    // width, and the row must stay usable at 320dp and with large font scale.
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(days.size) { index ->
+            val (day, label) = days[index]
+            FilterChip(
+                selected = selectedDay == day,
                 onClick = { onDaySelected(day) },
+                label = { Text(label, style = MaterialTheme.typography.labelMedium) },
                 shape = RoundedCornerShape(RadiusSoft),
-                colors = SegmentedButtonDefaults.colors(
-                    activeContainerColor = MaterialTheme.colorScheme.primary,
-                    activeContentColor = Color.White,
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedLabelColor = Color.White,
                 ),
-            ) {
-                Text(label, style = MaterialTheme.typography.labelMedium)
-            }
+            )
         }
     }
 }

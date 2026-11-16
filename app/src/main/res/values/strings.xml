@@ -105,6 +105,7 @@
     <string name="schedule_no_requests_hint">Press + to request a new class</string>
     <string name="schedule_my_requests">My requests</string>
     <string name="schedule_loading_directory">Loading directory…</string>
+    <string name="schedule_days_all">All</string>
     <string name="schedule_days_mon">Mon</string>
     <string name="schedule_days_tue">Tue</string>
     <string name="schedule_days_wed">Wed</string>
