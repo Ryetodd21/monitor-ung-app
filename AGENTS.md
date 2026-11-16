@@ -194,3 +194,7 @@ StaggeredEntrance selalu menyusun layout, lalu fade/geser 12dp; delay dibatasi 1
 Build prodRelease signed universal/arm64-v8a/armeabi-v7a/x86_64 tersedia lokal di `/home/terio-op/Downloads/MonitorUNG-0.30.0/`, bersama SHA256SUMS.txt dan icon-preview.png. Belum dipublikasikan ke website/VPS. Signer identik 0.29.1, non-debuggable, applicationId/version dan zipalign 16 KB lulus. Pin TLS cocok dengan rantai domain publik. 25 unit test prodDebug lulus; lintProdRelease 0 temuan; 7 tes baru PaperCardUiTest dikompilasi melalui compileDevDebugAndroidTestKotlin, belum dieksekusi. Tes mencakup padding, reservasi layout animasi, wrapping gradient/non-clickable, nilai counter awal, disabled button, navigasi dan kontras tiga tema. Log `/tmp/monitorung-paper31-final.log`.
 
 Pengguna akan menguji APK sendiri dan meminta image emulator dihapus. Unduhan image Android 36 dibatalkan/dihapus, paket emulator yang baru dipasang juga dihapus. Tidak ada klaim pemeriksaan runtime UI/TalkBack/font besar/animasi pada perangkat. Keystore, database lokal, izin, API, koleksi/sinkronisasi dan logic monitoring tidak diubah.
+
+## Perubahan 2026-11-16 (ponytail batch)
+
+**Label login** (`app/src/main/res/values/strings.xml` dan `values-in/strings.xml`): `login_nim_label` → `"NIM / Username"`, placeholder → `"NIM, username, atau email"`. `LoginViewModel.kt`: pesan error kosong → `"NIM/username dan password harus diisi"`. Tidak ada perubahan logika autentikasi Android; mapping ke field `nim` di request body tetap sama.

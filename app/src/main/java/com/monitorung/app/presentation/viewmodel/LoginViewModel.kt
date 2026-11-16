@@ -166,7 +166,7 @@ class LoginViewModel @Inject constructor(
         val state = _uiState.value
 
         if (state.nim.isBlank() || password.isBlank()) {
-            _uiState.update { it.copy(error = "Username dan password harus diisi") }
+            _uiState.update { it.copy(error = "NIM/username dan password harus diisi") }
             return
         }
 

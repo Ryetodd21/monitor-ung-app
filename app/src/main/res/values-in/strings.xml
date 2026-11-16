@@ -260,8 +260,8 @@
     <string name="common_skip">Lewati</string>
     <!-- LoginScreen -->
     <string name="login_app_subtitle">Universitas Negeri Gorontalo</string>
-    <string name="login_nim_label">Username</string>
-    <string name="login_nim_placeholder">Username atau email</string>
+    <string name="login_nim_label">NIM / Username</string>
+    <string name="login_nim_placeholder">NIM, username, atau email</string>
     <string name="login_auto_login">Masuk otomatis…</string>
     <string name="login_password_toggle_show">Tampilkan</string>
     <string name="login_password_toggle_hide">Sembunyikan</string>
