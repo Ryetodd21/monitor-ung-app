@@ -8,7 +8,7 @@ Aplikasi mahasiswa: login, izin, jadwal, monitoring penggunaan ponsel saat kulia
 
 | Bagian | Konfigurasi |
 | --- | --- |
-| Identitas | `com.monitorung.app`; versionCode 33, versionName 0.32.0. Distribusi publik terakhir di website: 0.29.1 (belum diperbarui). |
+| Identitas | `com.monitorung.app`; versionCode 34, versionName 0.32.1. Distribusi publik terakhir di website: 0.29.1 (belum diperbarui). |
 | Toolchain | Kotlin/Compose compiler 2.4.21, AGP 9.5.1, KSP 2.3.13, Gradle 9.9.1, JVM 17. |
 | Android | minSdk 26, targetSdk/compileSdk 37. ABI arm64-v8a, armeabi-v7a, x86_64; split + universal APK. |
 | UI | Compose BOM 2026.09.00, Material 3, Navigation Compose, window size classes, biometric. |
