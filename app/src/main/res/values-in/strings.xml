@@ -55,7 +55,8 @@
     <string name="history_30_title">Histori 30 Hari</string>
     <string name="history_30_subtitle">Data otomatis terhapus setelah terkirim ke server</string>
     <string name="history_about_title">Tentang Data Ini</string>
-    <string name="history_about_body">Data pemakaian HP kamu disimpan di HP secara lokal dan otomatis dikirim ke server kampus setiap malam (22.00–04.00 WITA). Setelah sampai di server, data di HP kamu akan dihapus otomatis. Tidak ada tombol hapus manual demi menjaga integritas data.</string>
+    <string name="common_retry">Coba lagi</string>
+    <string name="history_about_body">Data pemakaian HP kamu disimpan di perangkat dan dikirim ke server kampus setiap malam (22.00–04.00 WITA). Setelah berhasil dikirim, data di perangkat tetap disimpan dan ditandai sebagai tersinkron. Kamu bisa menghapus data lokal kapan saja lewat Pengaturan → Hapus semua data.</string>
     <string name="history_summary_30">Ringkasan 30 Hari</string>
     <string name="history_30_day_total">Total dari semua hari</string>
     <string name="history_total_screen">Total Screen</string>
@@ -284,17 +285,6 @@
     <string name="history_achievement_3day">3 hari</string>
     <string name="history_achievement_7day">7 hari</string>
     <string name="history_achievement_14day">14 hari</string>
-    <string name="challenge_done">Selesai!</string>
-    <string name="challenge_completed_label">Tantangan selesai!</string>
-    <string name="challenge_progress_label">%1$d%% selesai</string>
-    <string name="challenge_reduce_title">Kurangi Screen Time</string>
-    <string name="challenge_reduce_desc">Kurangi screen time 30 menit hari ini</string>
-    <string name="challenge_nososmed_title">Tanpa Sosmed</string>
-    <string name="challenge_nososmed_desc">Hari ini tanpa sosmed</string>
-    <string name="challenge_early_title">Ayo Pagi</string>
-    <string name="challenge_early_desc">Mulai belajar sebelum jam 9</string>
-    <string name="challenge_streak_title">Jaga Streak</string>
-    <string name="challenge_streak_desc">Tetap fokus hari ini untuk jaga streak</string>
     <!-- New Home Cards -->
     <string name="home_schedule_card_title">Jadwal Hari Ini</string>
     <string name="home_schedule_no_class">Tidak ada kelas hari ini</string>

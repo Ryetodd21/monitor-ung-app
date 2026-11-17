@@ -23,11 +23,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.monitorung.app.R
 import com.monitorung.app.domain.model.AppUsageLog
+import com.monitorung.app.domain.model.Gamification
 import com.monitorung.app.domain.model.SyncStatus
 import com.monitorung.app.presentation.ui.components.CompactAchievementBadge
 import com.monitorung.app.presentation.ui.components.ConfettiBurst
@@ -57,20 +57,21 @@ fun HistoryScreen(
     val usedInClass = uiState.logs.count { it.usedDuringClass }
     val pendingLogs = uiState.logs.count { it.syncStatus == SyncStatus.PENDING }
 
-    // Gamified XP calculation: streak_days * 10 + min(avg_screen_time, 1000)
-    val streakDays = uiState.logs
-        .sortedByDescending { it.logDate }
-        .takeWhile { it.syncStatus == SyncStatus.SYNCED }
-        .count()
-    val currentXp = minOf(streakDays * 10 + avgDaily, 5000)
-    val currentLevel = 1 + (currentXp / 500)
-    val xpToNextLevel = maxOf(0, (currentLevel * 500) - currentXp)
+    // Rumus level/XP/streak yang sama dengan Beranda (Gamification).
+    val streakDays = Gamification.streakDays(uiState.logs.map { it.logDate })
+    val levelState = Gamification.levelState(
+        Gamification.xpFromScreenMinutes(uiState.todayScreenMinutes)
+    )
 
-    // papercard-style celebration: confetti when everything is synced.
+    // papercard-style celebration: sekali saja per sesi, bukan tiap kali daftar berubah.
     var showConfetti by remember { mutableStateOf(false) }
+    var hasCelebrated by remember { mutableStateOf(false) }
     val allSyncedTrigger = pendingLogs == 0 && uiState.logs.isNotEmpty()
     LaunchedEffect(allSyncedTrigger) {
-        if (allSyncedTrigger) showConfetti = true
+        if (allSyncedTrigger && !hasCelebrated) {
+            hasCelebrated = true
+            showConfetti = true
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -123,11 +124,41 @@ fun HistoryScreen(
         // Data lifecycle info card
         DataLifecycleCard()
 
+        uiState.error?.let { message ->
+            PaperCard(
+                modifier = Modifier.fillMaxWidth(),
+                padding = 0.dp,
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Icon(
+                        Icons.Outlined.ErrorOutline,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Text(
+                        text = message,
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                    )
+                    TextButton(onClick = { viewModel.onRefresh() }) {
+                        Text(stringResource(R.string.common_retry))
+                    }
+                }
+            }
+        }
+
         // Level progress card (papercard gamified)
         LevelProgressCard(
-            level = currentLevel,
-            currentXp = currentXp,
-            xpToNextLevel = xpToNextLevel,
+            level = levelState.level,
+            currentXp = levelState.currentXp,
+            xpToNextLevel = levelState.xpToNextLevel,
             streakDays = streakDays,
             gradient = GradientBlueTeal,
         )
@@ -204,8 +235,8 @@ fun HistoryScreen(
                             icon = Icons.Filled.MilitaryTech,
                             label = stringResource(R.string.history_achievement_14day),
                             isUnlocked = streakDays >= 14,
-                            gradient = listOf(Color(0xFF0EA5E9), Color(0xFF06B6D4)),
-                            tint = Color(0xFF0EA5E9),
+                            gradient = listOf(InfoBlue, ChartCyan),
+                            tint = InfoBlue,
                         )
                     }
                 }
@@ -240,10 +271,10 @@ fun HistoryScreen(
                 }
 
                 if (usedInClass > 0) {
-                    Surface(
+                    PaperCard(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(RadiusS2),
-                        color = WarningAmber.copy(alpha = 0.1f),
+                        padding = 0.dp,
+                        containerColor = WarningAmber.copy(alpha = 0.1f),
                     ) {
                         Row(
                             modifier = Modifier.padding(12.dp),
@@ -316,10 +347,10 @@ fun HistoryScreen(
 
 @Composable
 private fun DataLifecycleCard() {
-    Surface(
+    PaperCard(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(RadiusM2),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        padding = 0.dp,
+        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -332,10 +363,10 @@ private fun DataLifecycleCard() {
                 tint = PrimaryBlue,
                 modifier = Modifier.size(20.dp)
             )
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stringResource(R.string.history_about_title),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -344,7 +375,6 @@ private fun DataLifecycleCard() {
                     text = stringResource(R.string.history_about_body),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = 17.sp
                 )
             }
         }

@@ -118,10 +118,10 @@ fun LoginScreen(
                     enter = fadeIn() + slideInVertically(),
                     exit = fadeOut() + slideOutVertically()
                 ) {
-                    Surface(
+                    PaperCard(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(RadiusM),
-                        color = MaterialTheme.colorScheme.primaryContainer
+                        padding = 0.dp,
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
                     ) {
                         Row(
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),

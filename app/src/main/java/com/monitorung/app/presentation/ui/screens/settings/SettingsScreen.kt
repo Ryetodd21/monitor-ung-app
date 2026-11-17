@@ -39,6 +39,7 @@ import com.monitorung.app.presentation.ui.components.BouncySwitch
 import com.monitorung.app.presentation.ui.components.ConfettiBurst
 import com.monitorung.app.presentation.ui.components.GradientSpringButton
 import com.monitorung.app.presentation.ui.components.PaperCard
+import com.monitorung.app.presentation.ui.components.SectionBadge
 import com.monitorung.app.presentation.ui.components.StaggeredEntrance
 import com.monitorung.app.util.AppConstants
 import com.monitorung.app.presentation.ui.screens.auth.BiometricHelper
@@ -157,7 +158,10 @@ fun SettingsScreen(
         StaggeredEntrance(index = 1, modifier = Modifier.fillMaxWidth()) {
         PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
             Column {
-                SectionBadge(stringResource(R.string.settings_section_sync), ChartTeal)
+                SectionBadge(
+                    stringResource(R.string.settings_section_sync), ChartTeal,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
                 // Sync status row — shows connectivity to backend.
                 // Pending: "X menunggu" (amber). Synced fresh: "Tersinkron" (green)
                 // with last-sync time. Empty: "Belum ada data".
@@ -233,7 +237,10 @@ fun SettingsScreen(
         StaggeredEntrance(index = 2, modifier = Modifier.fillMaxWidth()) {
         PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
             Column {
-                SectionBadge(stringResource(R.string.settings_section_appearance), ChartPurple)
+                SectionBadge(
+                    stringResource(R.string.settings_section_appearance), ChartPurple,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -257,7 +264,10 @@ fun SettingsScreen(
         StaggeredEntrance(index = 3, modifier = Modifier.fillMaxWidth()) {
         PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
             Column {
-                SectionBadge(stringResource(R.string.settings_section_permissions), PrimaryBlue)
+                SectionBadge(
+                    stringResource(R.string.settings_section_permissions), PrimaryBlue,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
                 PermissionStatusItem(
                     icon = Icons.Default.Apps,
                     title = stringResource(R.string.settings_usage_access),
@@ -319,7 +329,10 @@ fun SettingsScreen(
         val activity = androidx.activity.compose.LocalActivity.current as? androidx.fragment.app.FragmentActivity
         PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
             Column {
-                SectionBadge(stringResource(R.string.settings_section_privacy), WarningAmber)
+                SectionBadge(
+                    stringResource(R.string.settings_section_privacy), WarningAmber,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
                 SettingsItem(
                     icon = Icons.Default.Fingerprint,
                     title = stringResource(R.string.settings_biometric),
@@ -400,7 +413,10 @@ fun SettingsScreen(
         StaggeredEntrance(index = 5, modifier = Modifier.fillMaxWidth()) {
         PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
             Column {
-                SectionBadge(stringResource(R.string.settings_section_about), MaterialTheme.colorScheme.onSurfaceVariant)
+                SectionBadge(
+                    stringResource(R.string.settings_section_about), MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                )
                 SettingsItem(
                     icon = Icons.Default.Info,
                     title = stringResource(R.string.settings_version),
@@ -512,34 +528,6 @@ fun SettingsScreen(
             delay(AppConstants.DELETE_SUCCESS_TOAST_DURATION_MS)
             showDeleteSuccess = false
         }
-    }
-}
-
-/**
- * Gradient-badged section header for PaperCard-style settings sections.
- * Renders a pill with a colored left-side accent matching the card's content.
- */
-@Composable
-private fun SectionBadge(label: String, accentColor: Color) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        Box(
-            modifier = Modifier
-                .size(4.dp, 16.dp)
-                .clip(RoundedCornerShape(2.dp))
-                .background(accentColor)
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.SemiBold,
-            color = accentColor,
-        )
     }
 }
 

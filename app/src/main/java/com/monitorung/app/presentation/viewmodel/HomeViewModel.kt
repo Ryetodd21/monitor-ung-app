@@ -3,11 +3,11 @@ package com.monitorung.app.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.monitorung.app.domain.model.AppUsageLog
+import com.monitorung.app.domain.model.Gamification
 import com.monitorung.app.domain.model.SyncState
 import com.monitorung.app.domain.model.TodayAggregate
 import com.monitorung.app.domain.model.ThirtyDayAggregate
 import com.monitorung.app.domain.repository.LecturerItem
-import com.monitorung.app.util.AppConstants
 import com.monitorung.app.domain.repository.ScheduleRepository
 import com.monitorung.app.domain.repository.ScheduleRequest
 import com.monitorung.app.domain.repository.ScheduleRequestRepository
@@ -68,10 +68,10 @@ class HomeViewModel @Inject constructor(
                 _uiState.update { it.copy(thirtyDayAggregate = aggregate) }
             }
         }
-        // Per-day history list (3 most recent collection rows) — still useful
-        // as a "what we synced today" indicator.
+        // Riwayat harian. 30 baris disimpan supaya streak bisa dihitung penuh;
+        // Beranda hanya menampilkan 3 terbaru lewat take(3) di HomeScreen.
         viewModelScope.launch {
-            usageRepository.getRecentUsage(3).collect { logs ->
+            usageRepository.getRecentUsage(30).collect { logs ->
                 _uiState.update { it.copy(recentActivity = logs) }
             }
         }
@@ -82,16 +82,11 @@ class HomeViewModel @Inject constructor(
                 _uiState.update { it.copy(recentLocations = locations) }
             }
         }
-        // Round 26 audit (P1): Java's `Calendar.DAY_OF_WEEK` returns
-        // 1=Sunday…7=Saturday. The local schedules table stores ISO
-        // day-of-week (1=Monday…7=Sunday) per the rest of the app
-        // (server `ScheduleRequest.day_of_week` validator 1..7, the
-        // DAYS_ID array in akademik page, the schedule requests
-        // picker). Passing the raw Java value caused Monday
-        // (Calendar.MONDAY=2) to match the schedules stored under
-        // day_of_week=2 which here was actually Tuesday. Convert.
-        val javaDow = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_WEEK)
-        val todayDow = if (javaDow == java.util.Calendar.SUNDAY) 7 else javaDow - 1
+        // Hari bisnis memakai WITA, bukan timezone perangkat. `dayOfWeek.value`
+        // sudah ISO (1=Senin…7=Minggu), sama dengan `day_of_week` di Room.
+        // Sebelumnya memakai Calendar perangkat: di luar WITA jadwal "hari ini"
+        // bisa bergeser sehari dan streak ikut salah di batas tengah malam.
+        val todayDow = java.time.LocalDate.now(Gamification.WITA).dayOfWeek.value
         viewModelScope.launch {
             scheduleRepository.getSchedulesByDay(todayDow).collect { schedules ->
                 _uiState.update { it.copy(todaySchedules = schedules) }
@@ -123,6 +118,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Koleksi berkala tanpa mengubah status loading, supaya tombol dan skeleton
+     * tidak berkedip tiap menit. Kegagalan tetap disimpan di [HomeUiState.error]
+     * agar penyebabnya (mis. izin Usage Access) terlihat, bukan tampak "tanpa data".
+     */
+    fun refreshUsage() {
+        viewModelScope.launch {
+            usageRepository.collectAppUsage()
+                .onSuccess { _uiState.update { it.copy(error = null) } }
+                .onFailure { e -> _uiState.update { it.copy(error = e.message) } }
+        }
+    }
+
     fun syncNow() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
@@ -148,6 +156,8 @@ class HomeViewModel @Inject constructor(
 
 data class HistoryUiState(
     val logs: List<AppUsageLog> = emptyList(),
+    /** Sumber XP yang sama dengan Beranda (getTodayAggregate), supaya level cocok. */
+    val todayScreenMinutes: Int = 0,
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val error: String? = null
@@ -167,13 +177,23 @@ class HistoryViewModel @Inject constructor(
                 _uiState.update { it.copy(logs = logs, isLoading = false) }
             }
         }
+        viewModelScope.launch {
+            usageRepository.getTodayAggregate().collect { aggregate ->
+                _uiState.update { it.copy(todayScreenMinutes = aggregate.totalScreenTimeMinutes) }
+            }
+        }
     }
 
-    /** Reset isRefreshing after a brief tick so the pull-to-refresh gesture resolves. */
+    /**
+     * Pull-to-refresh mengoleksi pemakaian terbaru. Sebelumnya hanya menunda
+     * selama beberapa ratus ms lalu mematikan spinner tanpa mengambil data apa pun,
+     * jadi daftar histori tidak pernah berubah setelah ditarik.
+     */
     fun onRefresh() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isRefreshing = true) }
-            kotlinx.coroutines.delay(AppConstants.REFRESH_FEEDBACK_DURATION_MS)
+            _uiState.update { it.copy(isRefreshing = true, error = null) }
+            usageRepository.collectAppUsage()
+                .onFailure { e -> _uiState.update { it.copy(error = e.message) } }
             _uiState.update { it.copy(isRefreshing = false) }
         }
     }

@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.monitorung.app.presentation.ui.theme.RadiusMicro
 
 /**
  * Section badge — a colored left accent bar with an uppercase label.
@@ -27,14 +28,14 @@ fun SectionBadge(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Box(
             modifier = Modifier
                 .size(4.dp, 16.dp)
-                .clip(RoundedCornerShape(2.dp))
+                .clip(RoundedCornerShape(RadiusMicro))
                 .background(accentColor),
         )
         Text(

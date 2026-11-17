@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.monitorung.app.presentation.ui.theme.RadiusBubble
 
 /**
  * papercard-style empty-state bubble. Used across History (today/empty),
@@ -55,7 +56,7 @@ fun EmptyStateBubble(
         Box(
             modifier = Modifier
                 .size(64.dp)
-                .clip(RoundedCornerShape(32.dp))
+                .clip(RoundedCornerShape(RadiusBubble))
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center,
         ) {

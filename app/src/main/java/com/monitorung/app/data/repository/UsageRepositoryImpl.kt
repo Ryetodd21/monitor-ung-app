@@ -4,6 +4,7 @@ import androidx.core.content.edit
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import com.monitorung.app.data.local.dao.AppUsageLogDao
 import com.monitorung.app.data.local.dao.LocationLogDao
 import com.monitorung.app.data.local.entity.AppUsageLogEntity
@@ -75,19 +76,35 @@ class UsageRepositoryImpl @Inject constructor(
 
             val now = System.currentTimeMillis()
             val currentClass = scheduleRepository.getCurrentClass()
-                ?: return Result.failure(Exception("No active class schedule"))
             val zone = java.time.ZoneId.of("Asia/Makassar")
             val date = java.time.Instant.ofEpochMilli(now).atZone(zone).toLocalDate()
-            val start = date.atTime(parseScheduleTime(currentClass.startTime)
-                ?: return Result.failure(Exception("Invalid class start"))).atZone(zone).toInstant().toEpochMilli()
-            val end = date.atTime(parseScheduleTime(currentClass.endTime)
-                ?: return Result.failure(Exception("Invalid class end"))).atZone(zone).toInstant().toEpochMilli()
-            val usage = usageStatsManager.classUsage(start, minOf(now, end), context.packageName)
+
+            // Tanpa kelas aktif, tetap koleksi pemakaian sepanjang hari. Sebelumnya
+            // fungsi ini langsung gagal dengan "No active class schedule", sehingga
+            // Beranda tidak pernah menampilkan data apa pun saat mahasiswa memakai HP
+            // di luar jam kuliah.
+            val usage: Map<String, Long>
+            val windowStart: Long
+            val windowEnd: Long
+            if (currentClass != null) {
+                val classStart = date.atTime(parseScheduleTime(currentClass.startTime)
+                    ?: return Result.failure(Exception("Invalid class start"))).atZone(zone).toInstant().toEpochMilli()
+                val classEnd = date.atTime(parseScheduleTime(currentClass.endTime)
+                    ?: return Result.failure(Exception("Invalid class end"))).atZone(zone).toInstant().toEpochMilli()
+                windowStart = classStart
+                windowEnd = minOf(now, classEnd)
+                usage = usageStatsManager.classUsage(windowStart, windowEnd, context.packageName)
+            } else {
+                windowStart = date.atStartOfDay(zone).toInstant().toEpochMilli()
+                windowEnd = now
+                usage = usageStatsManager.classUsage(windowStart, windowEnd, context.packageName)
+            }
             val total = (usage.values.sum() / 60_000).toInt()
             val social = (usage.filterKeys { AppCategorizer.categorize(it) == "social_media" }.values.sum() / 60_000).toInt()
             val game = (usage.filterKeys { AppCategorizer.categorize(it) == "game" }.values.sum() / 60_000).toInt()
             val studentId = authRepository.getCurrentUser().first()?.studentId
                 ?: return Result.failure(Exception("No logged-in user"))
+            val inClass = currentClass != null
             val entity = AppUsageLogEntity(
                 studentId = studentId,
                 logDate = date.toString(),
@@ -97,11 +114,11 @@ class UsageRepositoryImpl @Inject constructor(
                 gameTimeMinutes = game,
                 otherAppTimeMinutes = (total - social - game).coerceAtLeast(0),
                 unlockCount = unlockTracker.getTodayCount(),
-                usedDuringClass = true,
-                scheduleId = currentClass.id,
+                usedDuringClass = inClass,
+                scheduleId = currentClass?.id,
             )
             appUsageLogDao.replaceDay(entity)
-            Result.success((appUsageLogDao.getByDate(studentId, date.toString(), currentClass.id) ?: entity).toDomain())
+            Result.success((appUsageLogDao.getByDate(studentId, date.toString(), currentClass?.id) ?: entity).toDomain())
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -369,15 +386,39 @@ class UsageRepositoryImpl @Inject constructor(
         if (value == null) SyncStatus.PENDING
         else runCatching { SyncStatus.valueOf(value) }.getOrDefault(SyncStatus.PENDING)
 
+    /**
+     * Cek izin Usage Access lewat AppOps. Sebelumnya memakai "queryUsageStats
+     * kosong = izin tidak ada", yang salah: perangkat baru atau pengguna yang
+     * belum membuka aplikasi apa pun juga menghasilkan daftar kosong, sehingga
+     * koleksi ditolak padahal izin sudah diberikan.
+     */
     private fun hasUsageStatsPermission(): Boolean {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DAY_OF_YEAR, -1)
-        val stats = usageStatsManager.queryUsageStats(
-            UsageStatsManager.INTERVAL_DAILY,
-            calendar.timeInMillis,
-            System.currentTimeMillis()
-        )
-        return stats.isNotEmpty()
+        val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as? android.app.AppOpsManager
+            ?: return false
+        val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            appOps.unsafeCheckOpNoThrow(
+                android.app.AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                context.packageName,
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            appOps.checkOpNoThrow(
+                android.app.AppOpsManager.OPSTR_GET_USAGE_STATS,
+                android.os.Process.myUid(),
+                context.packageName,
+            )
+        }
+        if (mode == android.app.AppOpsManager.MODE_ALLOWED) return true
+        // Sebagian OEM mengembalikan MODE_DEFAULT; anggap diberikan bila ada data.
+        if (mode != android.app.AppOpsManager.MODE_DEFAULT) return false
+        return runCatching {
+            usageStatsManager.queryUsageStats(
+                UsageStatsManager.INTERVAL_DAILY,
+                System.currentTimeMillis() - 86_400_000L,
+                System.currentTimeMillis(),
+            ).isNotEmpty()
+        }.getOrDefault(false)
     }
 
     private fun AppUsageLogEntity.toDto() = AppUsageLogDto(

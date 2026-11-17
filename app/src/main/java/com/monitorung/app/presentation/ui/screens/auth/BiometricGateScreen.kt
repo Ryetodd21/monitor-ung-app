@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import com.monitorung.app.R
 import com.monitorung.app.presentation.ui.components.PaperCard
+import com.monitorung.app.presentation.ui.components.SpringPrimaryButton
 
 @Composable
 fun BiometricGateScreen(
@@ -116,18 +117,22 @@ fun BiometricGateScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center)
                 biometricError?.let { message ->
-                    Surface(color = MaterialTheme.colorScheme.errorContainer,
-                        shape = MaterialTheme.shapes.medium, modifier = Modifier.fillMaxWidth()) {
+                    PaperCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                    ) {
                         Text(message, color = MaterialTheme.colorScheme.onErrorContainer,
-                            modifier = Modifier.padding(16.dp).semantics { liveRegion = LiveRegionMode.Polite },
+                            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
                             style = MaterialTheme.typography.bodyMedium)
                     }
                 }
-                Button(onClick = { triggerBiometricAuth() }, enabled = !authenticating,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)) {
-                    Text(stringResource(if (authenticating) R.string.biometric_waiting
-                        else R.string.biometric_verify_now), textAlign = TextAlign.Center)
-                }
+                SpringPrimaryButton(
+                    text = stringResource(if (authenticating) R.string.biometric_waiting
+                        else R.string.biometric_verify_now),
+                    onClick = { triggerBiometricAuth() },
+                    enabled = !authenticating,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                )
                 TextButton(onClick = onLogout, enabled = !authenticating,
                     modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
                     Text(stringResource(R.string.biometric_logout), textAlign = TextAlign.Center)

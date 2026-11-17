@@ -8,7 +8,7 @@ Aplikasi mahasiswa: login, izin, jadwal, monitoring penggunaan ponsel saat kulia
 
 | Bagian | Konfigurasi |
 | --- | --- |
-| Identitas | `com.monitorung.app`; versionCode 32, versionName 0.30.1. Distribusi publik terakhir di website: 0.29.1 (belum diperbarui). |
+| Identitas | `com.monitorung.app`; versionCode 33, versionName 0.32.0. Distribusi publik terakhir di website: 0.29.1 (belum diperbarui). |
 | Toolchain | Kotlin/Compose compiler 2.4.21, AGP 9.5.1, KSP 2.3.13, Gradle 9.9.1, JVM 17. |
 | Android | minSdk 26, targetSdk/compileSdk 37. ABI arm64-v8a, armeabi-v7a, x86_64; split + universal APK. |
 | UI | Compose BOM 2026.09.00, Material 3, Navigation Compose, window size classes, biometric. |
@@ -102,6 +102,14 @@ Keduanya mengambil maks 100 usage + 100 location per batch, mengirim `/api/logs/
 
 Pemetaan JSON di `Dtos.kt` harus cocok dengan schema server: `logs`, `locations`, `client_id`, `log_date`, `recorded_at`, `schedule_id`, `idempotency_key`, `synced_client_ids`. Perubahan property Kotlin tanpa `@SerializedName` bisa merusak API meski kompilasi lulus.
 
+**Perbaikan koleksi 2026-11-18 (data tidak terbaca setelah 10 menit pemakaian):** ada empat penyebab, semuanya sudah diperbaiki.
+
+- `collectAppUsage()` dulu langsung gagal `"No active class schedule"` bila tidak ada kelas berjalan, jadi Beranda kosong di luar jam kuliah. Sekarang tanpa kelas aktif ia mengoleksi pemakaian sejak 00:00 WITA sampai sekarang dan menulis baris `scheduleId = null`; dengan kelas aktif tetap memakai jendela kelas seperti sebelumnya.
+- Koleksi dulu hanya sekali saat layar dibuka. `HomeScreen` kini memanggil `viewModel.refreshUsage()` tiap 60 detik selama `RESUMED` (senyap, tanpa mengedipkan skeleton/loading).
+- `HomeUiState.error` tidak pernah dirender, sehingga kegagalan izin/kelas tampak seperti "tidak ada data". Sekarang ada kartu error + tombol "Coba lagi" di Beranda; Histori juga menampilkan error dengan retry.
+- `hasUsageStatsPermission()` dulu menyimpulkan "izin tidak ada" dari `queryUsageStats` kosong — salah pada perangkat baru. Sekarang memakai `AppOpsManager.OPSTR_GET_USAGE_STATS` (MODE_ALLOWED), dengan fallback query hanya untuk MODE_DEFAULT.
+- `AppUsageLogDao.getDayTotals` memakai **MAX, bukan SUM**. Baris per-kelas dan baris harian (`schedule_id = NULL`) sama-sama memuat total hari itu; SUM menghitung dua kali (diverifikasi dengan SQLite: 30+45 menjadi 75, seharusnya 45). Jangan kembalikan ke SUM.
+
 ## Background, MQTT, keamanan
 
 - `SmartMonitoringService` wajib memanggil `startForeground` nyata; manager menyediakan state/notifikasi. Hentikan receiver, coroutine, resource via `destroy()`/`close()`.
@@ -123,9 +131,13 @@ Visual Android: PaperCard lembut dan playful, berorientasi informasi mahasiswa. 
 
 - `Theme.kt`: primary biru #2454C6, canvas paper hangat #F6F5F1, semantic teal/amber/fuchsia, palette chart. Gunakan MaterialTheme dan token existing, bukan warna literal per layar.
 - ThemeVariant: `LIGHT`, `DARK`, `AMOLED`; dynamic color default false. Typography memakai FontFamily.Default, headline 32/28/24, body 16/14/12. Tidak memakai empat font web.
-- `PaperCard`: Surface theme-aware, border 1 dp, radius `RadiusPlayful` (24 dp), elevation 1 dp.
-- Pakai PaperPill/SectionBadge, SpringButton, BubbleNavBar, SkeletonShimmer, PullToRefreshWrapper, ProgressRing, AnimatedCounter, haptic existing.
-- Ada komponen gamifikasi (streak, achievement, challenge, confetti). Keberadaan file bukan bukti terpasang; periksa pemanggil.
+- `PaperCard`: satu-satunya primitif kartu (Semua kartu/banner/callout layar memakainya). Surface theme-aware, border 1 dp, radius `RadiusPlayful` (24 dp), elevation 1 dp. Parameter opsional `containerColor`/`borderColor` (default token tema) dipakai untuk callout berwarna; backward-compatible. `GradientCard`, `BubbleNavBar` membungkus `PaperCard`. `Surface` langsung tersisa hanya untuk elemen dekoratif (ikon lingkaran, badge/chip, step dots, catatan inset), bukan kartu.
+- Pakai PaperPill/SectionBadge, SpringButton, BubbleNavBar, SkeletonShimmer, PullToRefreshWrapper, ProgressRing, AnimatedCounter, haptic existing. `SectionBadge` hanya versi `components/SectionBadge.kt` (Settings dulu punya salinan lokal, sudah dihapus). `SectionBadge` **tidak memaksa lebar penuh**: pemanggil yang menentukan lewat `modifier` (wajib di `ProfileForm` agar ikon Edit tidak terdorong keluar layar).
+- `DailyChallengeWidget` dan semua string `challenge_*` sudah dihapus. Tidak ada lagi kartu "Kurangi Screen Time"/tantangan harian; jangan menambahkannya kembali tanpa data progres nyata.
+- Warna/radius layar memakai token `Theme.kt`, bukan literal `Color(0x)`/`Color.Gray` maupun angka dp. `Typography.kt` mendefinisikan `titleSmall`/`labelSmall` (sebelumnya jatuh ke default Material3). Konversi kartu 2026-11-17: Permission, Terms, History, Schedule, Home, Login, BiometricGate, DailyChallengeWidget. Verifikasi: `testProdDebugUnitTest` 27/27, `lintProdRelease` 0 issue. Belum diuji runtime/perangkat nyata.
+- Ada komponen gamifikasi (streak, achievement, confetti). Keberadaan file bukan bukti terpasang; periksa pemanggil.
+- Level/XP/streak dihitung terpusat oleh `domain/model/Gamification.kt` (WITA, bukan timezone perangkat). Beranda dan Histori memakai sumber XP yang sama (`getTodayAggregate`) dan daftar 30 log yang sama, sehingga angka level identik. `LevelProgressCard` menerima XP di level berjalan + sisa XP, bukan XP kumulatif. Jangan membuat rumus lokal baru di layar.
+- Pull-to-refresh Histori benar-benar memanggil `collectAppUsage()`; kegagalan ditampilkan dengan tombol retry. Teks `history_about_*` sudah jujur: salinan lokal tetap ada setelah sinkron (hanya ditandai SYNCED) dan penghapusan manual ada di Pengaturan. Jangan menjanjikan penghapusan otomatis.
 - Phone/tablet memakai WindowSize classes. Pertahankan inset edge-to-edge, ruang navigasi, layout layar sempit, pembesaran font.
 - Status permission, offline, pending, synced, gagal, belum ada jadwal harus terbaca jelas. Loading tidak boleh menyamarkan kegagalan atau angka belum tersedia menjadi nol.
 - Icon/tombol butuh contentDescription/semantics; status memakai label/ikon selain warna. Jaga touch target, TalkBack, kontras.
@@ -166,12 +178,13 @@ Test yang relevan:
 - `service/NextClassOccurrenceTest.kt` — jadwal berikutnya.
 - `data/repository/ScheduleOwnerKeyTest.kt` — kunci Room memakai users.id.
 - `presentation/viewmodel/ScheduleDefaultFilterTest.kt` — tab jadwal default tanpa filter.
+- `domain/model/GamificationTest.kt` — batas level/XP, batas 120 XP, streak WITA dan urutan acak.
 
 Perubahan izin/background/GPS/baterai butuh perangkat nyata; unit test tidak membuktikan perilaku OEM, Doze, geofence, atau foreground service.
 
 ## Status rilis
 
-APK **0.30.1 (versionCode 32)** signed dengan sertifikat yang sama (`SHA-256 4e8a8649…`), empat ABI + `SHA256SUMS.txt` di `/home/terio-op/Downloads/MonitorUNG-0.30.1/`. `testProdDebugUnitTest` 27 test, 0 gagal. **Belum dipublikasikan** ke `website/public/downloads/`; pengguna memasang manual. Unduhan publik di website masih 0.29.1 dan direktori `/downloads/` di VPS saat ini kosong.
+APK **0.32.0 (versionCode 33)** signed dengan sertifikat yang sama (`SHA-256 4e8a8649…`), empat ABI + `SHA256SUMS.txt` di `/home/terio-op/Downloads/MonitorUNG-0.32.0/`. Folder lama `MonitorUNG-0.30.1/` (versionCode 32) dibiarkan utuh. Build 0.32.0 memuat overhaul PaperCard dan perbaikan A–D (hapus tantangan "Kurangi Screen Time", tombol Edit profil, teks "Tentang Data Ini" yang jujur, lima bug fungsional). Verifikasi: `testProdDebugUnitTest` 30 test 0 gagal, `lintProdRelease` 0 issue, `apksigner` cocok di keempat APK, `sha256sum -c` OK. Build prod memakai kredensial MQTT asli dari `.env.production` (via env, bukan placeholder). **Belum dipublikasikan** ke `website/public/downloads/`; pengguna memasang manual. Unduhan publik di website masih 0.29.1 dan direktori `/downloads/` di VPS saat ini kosong.
 
 Tidak ada perangkat/emulator terhubung; instalasi, upgrade, SQLCipher dengan data lama, biometrik, monitoring background, TalkBack, dan font besar belum diuji pada perangkat nyata. Unit test debug bukan eksekusi runtime APK hasil R8.
 

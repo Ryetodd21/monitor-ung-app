@@ -179,7 +179,7 @@ val SpaceXXL = 28.dp
 //   - RadiusL (16dp): large cards, bottom sheets
 //   - RadiusXL (20dp): modals, hero surfaces
 //   - RadiusXXL (28.dp): full-bleed containers, splash screens
-//   - RadiusPlayful (28dp): gamified card corners (papercard-style)
+//   - RadiusPlayful (24dp): kartu papercard standar (semua kartu memakai ini)
 //   - RadiusBubble (32dp): bottom nav bubbles, achievement badges
 //   - RadiusPill (50dp): pill/capsule shapes (full height rounding)
 val RadiusHairline = 1.dp

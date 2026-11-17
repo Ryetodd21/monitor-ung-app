@@ -29,6 +29,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.delay
 import com.monitorung.app.R
 import com.monitorung.app.domain.model.AppUsageLog
+import com.monitorung.app.domain.model.Gamification
 import com.monitorung.app.domain.model.Schedule
 import com.monitorung.app.presentation.ui.components.*
 import com.monitorung.app.presentation.ui.theme.*
@@ -44,13 +45,16 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) { viewModel.collectUsage() }
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner, viewModel) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            // Koleksi berkala: sebelumnya data hanya diambil sekali saat layar dibuka,
+            // jadi pemakaian baru tidak pernah muncul sampai app dibuka ulang.
+            // refreshServerStatus sekaligus menjaga indikator offline tetap akurat.
             while (true) {
                 viewModel.refreshServerStatus()
-                delay(30_000)
+                viewModel.refreshUsage()
+                delay(60_000)
             }
         }
     }
@@ -82,10 +86,10 @@ fun HomeScreen(
             enter = fadeIn() + expandVertically(),
             exit = fadeOut() + shrinkVertically(),
         ) {
-            Surface(
+            PaperCard(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(RadiusM),
-                color = WarningAmberSoft,
+                padding = 0.dp,
+                containerColor = WarningAmberSoft,
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
@@ -103,6 +107,40 @@ fun HomeScreen(
                         style = MaterialTheme.typography.bodySmall,
                         color = WarningAmber,
                     )
+                }
+            }
+        }
+
+        // Error card — sebelumnya `uiState.error` tidak pernah dirender sehingga
+        // kegagalan koleksi (izin Usage Access, kelas, dsb) tampak seperti "tidak ada data".
+        uiState.error?.let { message ->
+            StaggeredEntrance(index = 0, modifier = Modifier.fillMaxWidth()) {
+                PaperCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    padding = 0.dp,
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Icon(
+                            Icons.Default.ErrorOutline,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onErrorContainer,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Text(
+                            text = message,
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                        )
+                        TextButton(onClick = { viewModel.collectUsage() }) {
+                            Text(stringResource(R.string.common_retry))
+                        }
+                    }
                 }
             }
         }
@@ -174,40 +212,30 @@ fun HomeScreen(
         }
 
         // Level progress card — derived from screen time milestones
+        val streak = Gamification.streakDays(uiState.recentActivity.map { it.logDate })
+        val levelState = Gamification.levelState(
+            Gamification.xpFromScreenMinutes(uiState.todayUsage?.totalScreenTimeMinutes ?: 0)
+        )
         StaggeredEntrance(index = 6, modifier = Modifier.fillMaxWidth()) {
-            val streak = computeStreak(uiState.recentActivity)
-            val level = computeLevel(uiState.todayUsage?.totalScreenTimeMinutes ?: 0)
-            val xp = computeXp(uiState.todayUsage?.totalScreenTimeMinutes ?: 0)
-            val xpMax = xpPerLevel(level)
             LevelProgressCard(
-                level = level,
-                currentXp = xp,
-                xpToNextLevel = xpMax,
+                level = levelState.level,
+                currentXp = levelState.currentXp,
+                xpToNextLevel = levelState.xpToNextLevel,
                 streakDays = streak,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
-
-        // Daily challenge widget
-        StaggeredEntrance(index = 7, modifier = Modifier.fillMaxWidth()) {
-            DailyChallengeWidget(
-                challenge = DailyChallengeType.REDUCE_SCREEN_TIME,
-                progress = computeChallengeProgress(uiState.todayUsage?.totalScreenTimeMinutes ?: 0),
-                isCompleted = (uiState.todayUsage?.totalScreenTimeMinutes ?: 999) < 60,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
 
         // Streak indicator
         StaggeredEntrance(index = 8, modifier = Modifier.fillMaxWidth()) {
-            StreakIndicator(streakDays = computeStreak(uiState.recentActivity))
+            StreakIndicator(streakDays = streak)
         }
 
         // Aktivitas 3 hari terakhir
         if (uiState.recentActivity.isNotEmpty()) {
             StaggeredEntrance(index = 9, modifier = Modifier.fillMaxWidth()) {
                 PaperCard(modifier = Modifier.fillMaxWidth(), padding = 0.dp) {
-                    RecentActivityContent(recentActivity = uiState.recentActivity)
+                    RecentActivityContent(recentActivity = uiState.recentActivity.take(3))
                 }
             }
         }
@@ -221,37 +249,6 @@ fun HomeScreen(
                 )
             }
         }
-    }
-}
-
-// ─── Level / XP helpers ──────────────────────────────────────────────────────
-
-/** XP earned today from screen time. 1 XP per minute, max 120 XP/day. */
-private fun computeXp(screenMinutes: Int): Int = minOf(screenMinutes, 120)
-
-/** XP needed to fill one level. */
-private fun xpPerLevel(level: Int): Int = 100 + (level - 1) * 20
-
-/** Derive level from cumulative XP today. Each level needs more XP. */
-private fun computeLevel(screenMinutes: Int): Int {
-    val xp = computeXp(screenMinutes)
-    var lvl = 1
-    var total = xpPerLevel(1)
-    while (xp >= total) {
-        lvl++
-        total += xpPerLevel(lvl)
-    }
-    return lvl
-}
-
-/** Mock challenge progress: <60 min = 100%, <90 = 50%, else 0%. */
-private fun computeChallengeProgress(screenMinutes: Int): Float {
-    return when {
-        screenMinutes < 30 -> 1f
-        screenMinutes < 60 -> 0.75f
-        screenMinutes < 90 -> 0.5f
-        screenMinutes < 120 -> 0.25f
-        else -> 0f
     }
 }
 
@@ -340,7 +337,7 @@ private fun StatusCardContent(
                         Box(
                             modifier = Modifier
                                 .size(8.dp)
-                                .clip(RoundedCornerShape(4.dp))
+                                .clip(RoundedCornerShape(RadiusXXS))
                                 .background(WarningAmber.copy(alpha = 0.8f))
                         )
                         Text(
@@ -394,21 +391,6 @@ private fun StatusChip(
             }
         }
     }
-}
-
-/** Count consecutive days (from today backward) where a usage log exists. */
-private fun computeStreak(recent: List<AppUsageLog>): Int {
-    if (recent.isEmpty()) return 0
-    val dates = recent.map { it.logDate }.toSortedSet().toList()
-    val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
-    val cal = java.util.Calendar.getInstance()
-    var streak = 0
-    while (true) {
-        val key = sdf.format(cal.time)
-        if (dates.contains(key)) { streak++; cal.add(java.util.Calendar.DAY_OF_YEAR, -1) }
-        else break
-    }
-    return streak
 }
 
 @Composable
@@ -654,7 +636,7 @@ private fun EmptyUsageContent() {
         Box(
             modifier = Modifier
                 .size(64.dp)
-                .clip(RoundedCornerShape(32.dp))
+                .clip(RoundedCornerShape(RadiusBubble))
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center
         ) {
@@ -748,7 +730,7 @@ private fun ScheduleRow(schedule: com.monitorung.app.domain.model.Schedule) {
         Box(
             modifier = Modifier
                 .size(8.dp)
-                .clip(RoundedCornerShape(4.dp))
+                .clip(RoundedCornerShape(RadiusXXS))
                 .background(if (isActive) ChartTeal else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)),
         )
         Column(modifier = Modifier.weight(1f)) {
@@ -857,7 +839,7 @@ private fun LocationStatusCard(
             Box(
                 modifier = Modifier
                     .size(36.dp)
-                    .clip(RoundedCornerShape(18.dp))
+                    .clip(RoundedCornerShape(RadiusPill))
                     .background(statusColor.copy(alpha = 0.12f)),
                 contentAlignment = Alignment.Center,
             ) {

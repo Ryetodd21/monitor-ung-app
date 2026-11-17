@@ -39,7 +39,6 @@ import com.monitorung.app.R
 import com.monitorung.app.presentation.ui.components.AchievementBadge
 import com.monitorung.app.presentation.ui.components.ConfettiBurst
 import com.monitorung.app.presentation.ui.components.GradientCard
-import com.monitorung.app.presentation.ui.components.PaperCard
 import com.monitorung.app.presentation.ui.components.SectionBadge
 import com.monitorung.app.presentation.ui.components.SpringButton
 import com.monitorung.app.presentation.ui.components.StaggeredEntrance
@@ -456,6 +455,7 @@ private fun ProfileForm(
             SectionBadge(
                 label = stringResource(R.string.profile_section_account),
                 accentColor = ChartBlue,
+                modifier = Modifier.weight(1f),
             )
             if (!editMode) {
                 IconButton(onClick = onEdit) {

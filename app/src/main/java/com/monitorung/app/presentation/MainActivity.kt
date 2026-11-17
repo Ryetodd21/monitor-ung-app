@@ -43,6 +43,7 @@ import com.monitorung.app.presentation.ui.screens.auth.BiometricGateScreen
 import com.monitorung.app.presentation.ui.screens.auth.BiometricSetupDialog
 import com.monitorung.app.presentation.ui.theme.GradientBlueTeal
 import com.monitorung.app.presentation.ui.theme.MonitorUNGTheme
+import com.monitorung.app.presentation.ui.theme.RadiusXL
 import com.monitorung.app.presentation.viewmodel.AppAccessState
 import com.monitorung.app.presentation.viewmodel.LoginViewModel
 import com.monitorung.app.presentation.viewmodel.ThemeViewModel
@@ -197,7 +198,7 @@ private fun BrandedSplashContent() {
         Box(
             modifier = Modifier
                 .size((80 * scale).dp)
-                .clip(RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(RadiusXL))
                 .background(Brush.linearGradient(GradientBlueTeal)),
             contentAlignment = Alignment.Center,
         ) {

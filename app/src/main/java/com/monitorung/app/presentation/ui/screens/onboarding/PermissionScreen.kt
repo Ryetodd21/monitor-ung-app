@@ -39,9 +39,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.monitorung.app.R
 import com.monitorung.app.presentation.ui.components.ConfettiBurst
-import com.monitorung.app.presentation.ui.components.GradientCard
 import com.monitorung.app.presentation.ui.components.GradientSpringButton
-import com.monitorung.app.presentation.ui.components.SpringButton
+import com.monitorung.app.presentation.ui.components.PaperCard
 import com.monitorung.app.presentation.ui.components.StaggeredEntrance
 import com.monitorung.app.presentation.ui.theme.*
 import com.monitorung.app.presentation.viewmodel.OnboardingViewModel
@@ -231,14 +230,10 @@ fun PermissionScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             // Progress card — playful gradient header bar + gradient progress fill
-            Surface(
+            PaperCard(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(RadiusL),
-                color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(
-                    1.dp,
-                    MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
-                )
+                padding = 0.dp,
+                borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     // Gradient header accent bar
@@ -359,21 +354,19 @@ fun PermissionScreen(
                     StaggeredEntrance(index = 3, modifier = Modifier.fillMaxWidth()) {
                         Spacer(modifier = Modifier.height(4.dp))
 
-                        Surface(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(RadiusM2))
-                                .clickable {
-                                    try {
-                                        context.startActivity(
-                                            Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
-                                        )
-                                    } catch (e: Exception) {
-                                        context.startActivity(Intent(Settings.ACTION_SETTINGS))
-                                    }
-                                },
-                            shape = RoundedCornerShape(RadiusM2),
-                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                        PaperCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            padding = 0.dp,
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                            onClick = {
+                                try {
+                                    context.startActivity(
+                                        Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                                    )
+                                } catch (e: Exception) {
+                                    context.startActivity(Intent(Settings.ACTION_SETTINGS))
+                                }
+                            },
                         ) {
                             Row(
                                 modifier = Modifier.padding(14.dp),
@@ -417,10 +410,10 @@ fun PermissionScreen(
                     StaggeredEntrance(index = 4, modifier = Modifier.fillMaxWidth()) {
                         Spacer(modifier = Modifier.height(4.dp))
 
-                        Surface(
+                        PaperCard(
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(RadiusM2),
-                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                            padding = 0.dp,
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                         ) {
                             Row(
                                 modifier = Modifier.padding(14.dp),
@@ -528,21 +521,15 @@ private fun PermissionCard(
         Brush.linearGradient(listOf(item.color.copy(alpha = 0.04f), item.color.copy(alpha = 0.01f)))
     }
 
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(RadiusL))
-            .clickable(enabled = !item.isGranted) { onAction(item.id) },
-        shape = RoundedCornerShape(RadiusL),
-        color = MaterialTheme.colorScheme.surface,
-        border = BorderStroke(
-            width = 1.dp,
-            color = when {
-                item.isGranted -> SuccessGreen.copy(alpha = 0.3f)
-                item.required -> MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
-                else -> MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
-            }
-        )
+    PaperCard(
+        modifier = Modifier.fillMaxWidth(),
+        padding = 0.dp,
+        onClick = if (item.isGranted) null else ({ onAction(item.id) }),
+        borderColor = when {
+            item.isGranted -> SuccessGreen.copy(alpha = 0.3f)
+            item.required -> MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
+            else -> MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+        },
     ) {
         Box(modifier = Modifier.background(gradientBg)) {
             Row(

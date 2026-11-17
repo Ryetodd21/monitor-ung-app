@@ -280,7 +280,7 @@ private fun ScheduleListTab(
                     .heightIn(min = 52.dp)
                     .fillMaxWidth(),
                 enabled = true,
-                gradient = if (schedules.isEmpty()) Brush.horizontalGradient(GradientBlueTeal) else Brush.horizontalGradient(listOf(Color.Gray, Color.Gray)),
+                gradient = if (schedules.isEmpty()) Brush.horizontalGradient(GradientBlueTeal) else Brush.horizontalGradient(listOf(MaterialTheme.colorScheme.outlineVariant, MaterialTheme.colorScheme.outlineVariant)),
                 contentColor = if (schedules.isEmpty()) Color.White else MaterialTheme.colorScheme.onSurface,
                 cornerRadius = RadiusPlayful,
             )
@@ -558,7 +558,7 @@ private fun RequestCard(request: ScheduleRequest) {
                     "pending" -> Brush.horizontalGradient(GradientAmberGold) to WarningAmber
                     "approved" -> Brush.horizontalGradient(GradientTealGreen) to ChartTeal
                     "rejected" -> Brush.horizontalGradient(listOf(ErrorFuchsia.copy(alpha = 0.6f), ChartPurple)) to ErrorFuchsia
-                    else -> Brush.horizontalGradient(listOf(Color.Gray, Color.Gray)) to Color.Gray
+                    else -> Brush.horizontalGradient(listOf(MaterialTheme.colorScheme.outline, MaterialTheme.colorScheme.outline)) to MaterialTheme.colorScheme.outline
                 }
                 Box(
                     modifier = Modifier
@@ -708,9 +708,9 @@ private fun ScheduleRequestBottomSheet(
             Text(stringResource(R.string.schedule_request_sheet_title), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
 
             // Info banner
-            Surface(
-                shape = RoundedCornerShape(RadiusS),
-                color = PrimaryBlueLight
+            PaperCard(
+                padding = 0.dp,
+                containerColor = PrimaryBlueLight,
             ) {
                 Row(
                     modifier = Modifier.padding(12.dp),

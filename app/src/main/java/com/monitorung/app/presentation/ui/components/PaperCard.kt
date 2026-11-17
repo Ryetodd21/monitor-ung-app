@@ -10,19 +10,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/** A quiet paper surface; padding = 0.dp lets the content own its spacing. */
+/**
+ * Satu-satunya permukaan kartu di aplikasi: bentuk [RadiusPlayful], border 1 dp,
+ * elevasi 1 dp, warna dari tema. [containerColor]/[borderColor] hanya untuk
+ * kartu callout berwarna; keduanya default ke token tema agar tampilan seragam.
+ * `padding = 0.dp` membuat konten mengatur spacing sendiri.
+ */
 @Composable
 fun PaperCard(
     modifier: Modifier = Modifier,
     padding: Dp = 16.dp,
     onClick: (() -> Unit)? = null,
+    containerColor: Color? = null,
+    borderColor: Color? = null,
     content: @Composable () -> Unit,
 ) {
     val shape = RoundedCornerShape(RadiusPlayful)
-    val border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+    val border = BorderStroke(1.dp, borderColor ?: MaterialTheme.colorScheme.outlineVariant)
+    val color = containerColor ?: MaterialTheme.colorScheme.surface
     val inner: @Composable () -> Unit = {
         if (padding > 0.dp) {
             Column(modifier = Modifier.padding(padding)) { content() }
@@ -35,7 +44,7 @@ fun PaperCard(
             onClick = onClick,
             modifier = modifier,
             shape = shape,
-            color = MaterialTheme.colorScheme.surface,
+            color = color,
             tonalElevation = 0.dp,
             shadowElevation = 1.dp,
             border = border,
@@ -45,7 +54,7 @@ fun PaperCard(
         Surface(
             modifier = modifier,
             shape = shape,
-            color = MaterialTheme.colorScheme.surface,
+            color = color,
             tonalElevation = 0.dp,
             shadowElevation = 1.dp,
             border = border,

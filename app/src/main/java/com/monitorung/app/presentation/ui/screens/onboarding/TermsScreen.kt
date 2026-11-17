@@ -28,6 +28,7 @@ import com.monitorung.app.R
 import com.monitorung.app.presentation.ui.components.ConfettiBurst
 import com.monitorung.app.presentation.ui.components.GradientCard
 import com.monitorung.app.presentation.ui.components.GradientSpringButton
+import com.monitorung.app.presentation.ui.components.PaperCard
 import com.monitorung.app.presentation.ui.components.StaggeredEntrance
 import com.monitorung.app.presentation.ui.theme.*
 import com.monitorung.app.presentation.viewmodel.OnboardingViewModel
@@ -246,10 +247,10 @@ fun TermsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     // Warning box
-                    Surface(
+                    PaperCard(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(RadiusM2),
-                        color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f)
+                        padding = 0.dp,
+                        containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f),
                     ) {
                         Row(
                             modifier = Modifier.padding(14.dp),

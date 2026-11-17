@@ -28,8 +28,9 @@ import com.monitorung.app.presentation.ui.theme.GradientBlueTeal
  * Gradient fill on progress bar, animated on appear.
  * Level-up triggers confetti (caller handles via onLevelUp callback).
  *
- * Level formula: level = 1 + (totalXp / 1000) — each level needs 1000 XP.
- * XP = streak_days * 10 + avg_screen_time_minutes_today.
+ * Level/XP dihitung terpusat oleh [com.monitorung.app.domain.model.Gamification]
+ * supaya angka di Beranda dan Histori identik. currentXp = XP di level berjalan,
+ * xpToNextLevel = sisa XP menuju level berikutnya.
  */
 @Composable
 fun LevelProgressCard(

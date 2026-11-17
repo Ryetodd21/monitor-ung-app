@@ -126,12 +126,18 @@ interface AppUsageLogDao {
      * to the single row's value. Kept as SUM/MAX for safety so a partial-failed
      * migration (which left multiple rows per day) still produces correct totals.
      */
+    /**
+     * Total harian. Memakai MAX, bukan SUM: baris per-kelas dan baris harian
+     * (tanpa jadwal) sama-sama memuat total pemakaian hari itu, jadi SUM akan
+     * menghitung dua kali. MAX juga benar untuk sisa baris lama dari migrasi
+     * yang belum rapi.
+     */
     @Query("""
         SELECT
-            COALESCE(SUM(total_screen_time_minutes), 0) AS total_screen_time_minutes,
-            COALESCE(SUM(social_media_time_minutes), 0) AS social_media_time_minutes,
-            COALESCE(SUM(game_time_minutes), 0) AS game_time_minutes,
-            COALESCE(SUM(other_app_time_minutes), 0) AS other_app_time_minutes,
+            COALESCE(MAX(total_screen_time_minutes), 0) AS total_screen_time_minutes,
+            COALESCE(MAX(social_media_time_minutes), 0) AS social_media_time_minutes,
+            COALESCE(MAX(game_time_minutes), 0) AS game_time_minutes,
+            COALESCE(MAX(other_app_time_minutes), 0) AS other_app_time_minutes,
             COALESCE(MAX(unlock_count), 0) AS unlock_count,
             MAX(CASE WHEN used_during_class = 1 THEN 1 ELSE 0 END) AS used_during_class
         FROM app_usage_logs
