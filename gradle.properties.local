@@ -1,0 +1,14 @@
+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8 -Djava.net.preferIPv4Stack=true -Djava.rmi.server.hostname=127.0.0.1
+org.gradle.parallel=true
+org.gradle.caching=true
+org.gradle.configuration-cache=false
+android.useAndroidX=true
+android.enableJetifier=false
+kotlin.code.style=official
+android.nonTransitiveRClass=true
+monitorung.keystore.path=release.keystore.p12
+monitorung.keystore.password=MonitorUNG2026Secure!
+monitorung.key.alias=monitorung
+monitorung.key.password=MonitorUNG2026Secure!
+mqttUsername=monitorung
+mqttPassword=afe55cfd62925d6b6a9d01484f3cdf39

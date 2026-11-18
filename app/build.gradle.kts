@@ -12,6 +12,7 @@ plugins {
     // device. To activate FCM: replace this file with the one
     // downloaded from Firebase Console and rebuild.
     alias(libs.plugins.google.services)
+    alias(libs.plugins.cyclonedx)
 }
 
 android {

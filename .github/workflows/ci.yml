@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    name: Android — unit tests, lint, SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      # setup-android only installs platform-tools by default. compileSdk 37
+      # resolves platform android-37.0 + build-tools 36.0.0; without them AGP
+      # tries to auto-download and the build fails on a locked-down runner.
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: |
+            platform-tools
+            platforms;android-37.0
+            build-tools;36.0.0
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      # google-services.json is gitignored (real Firebase config) but the
+      # google.services plugin hard-fails without it. This checked-in
+      # placeholder keeps CI building; the FCM code stays dormant.
+      - name: Provide placeholder google-services.json
+        run: cp app/google-services.ci.json app/google-services.json
+
+      # -PmqttPassword: prod buildTypes throw if it is missing. The value is
+      # never used by dev* tasks; it only satisfies configuration-time check.
+      - name: Unit tests
+        run: ./gradlew :app:testDevDebugUnitTest -PmqttPassword=ci
+
+      - name: Android Lint
+        run: ./gradlew :app:lintDevDebug -PmqttPassword=ci
+
+      # Syft cannot read an APK (no dependency manifest inside), so the SBOM
+      # comes from the Gradle dependency graph instead.
+      - name: SBOM (CycloneDX)
+        run: ./gradlew :app:cyclonedxBom -PmqttPassword=ci
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v7
+        with:
+          name: sbom-android
+          path: app/build/reports/cyclonedx/bom.json
+          retention-days: 30
+
+      - name: Upload test + lint reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-reports
+          path: |
+            app/build/reports/tests/
+            app/build/reports/lint-results-*.html
+          retention-days: 7

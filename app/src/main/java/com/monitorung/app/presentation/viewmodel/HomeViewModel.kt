@@ -298,7 +298,8 @@ class ScheduleViewModel @Inject constructor(
         lecturerId: String?,
         subjectNameRaw: String?,
         lecturerNameRaw: String?,
-        description: String
+        description: String,
+        campusId: String? = null
     ) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
@@ -311,7 +312,8 @@ class ScheduleViewModel @Inject constructor(
                 lecturerId = lecturerId,
                 subjectNameRaw = subjectNameRaw,
                 lecturerNameRaw = lecturerNameRaw,
-                description = description
+                description = description,
+                campusId = campusId
             ).onSuccess {
                 _uiState.update { it.copy(isLoading = false, actionSuccess = "Request jadwal berhasil diajukan. Menunggu persetujuan admin.") }
                 loadMyRequests()

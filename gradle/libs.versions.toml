@@ -210,6 +210,9 @@ security = [
 ]
 
 [plugins]
+# SBOM generation for CI (.github/workflows/ci.yml). Reporting-only plugin:
+# no effect unless :app:cyclonedxBom is invoked.
+cyclonedx = { id = "org.cyclonedx.bom", version = "3.6.1" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

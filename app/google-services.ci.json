@@ -1,0 +1,58 @@
+{
+  "project_info": {
+    "project_number": "000000000000",
+    "project_id": "monitor-ung-placeholder",
+    "storage_bucket": "monitor-ung-placeholder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "android_client_info": {
+          "package_name": "com.monitorung.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyPlaceholderReplaceWithRealKeyFromFirebaseConsole"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      },
+      "project_info": {
+        "project_number": "000000000000",
+        "project_id": "monitor-ung-placeholder",
+        "storage_bucket": "monitor-ung-placeholder.appspot.com"
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000001",
+        "android_client_info": {
+          "package_name": "com.monitorung.app.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyPlaceholderReplaceWithRealKeyFromFirebaseConsole"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      },
+      "project_info": {
+        "project_number": "000000000000",
+        "project_id": "monitor-ung-placeholder",
+        "storage_bucket": "monitor-ung-placeholder.appspot.com"
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -21,6 +21,8 @@ Aplikasi mahasiswa: login, izin, jadwal, monitoring penggunaan ponsel saat kulia
 
 Versi dependency dipusatkan di `gradle/libs.versions.toml`; jangan duplikasi nomor versi di build script. Manifest fitur/platform ada di `app/src/main/AndroidManifest.xml`.
 
+CI: `.github/workflows/ci.yml` — `:app:testDevDebugUnitTest` + `:app:lintDevDebug` dengan `-PmqttPassword=ci` (prod buildTypes melempar `GradleException` saat konfigurasi bila properti kosong, walau task yang jalan cuma `dev*`), lalu `:app:cyclonedxBom` (plugin `org.cyclonedx.bom`, reporting-only; Syft tidak bisa membaca APK) yang mengunggah `app/build/reports/cyclonedx/bom.json`. `app/google-services.json` gitignored, jadi CI menyalin `app/google-services.ci.json` (placeholder ter-track) — tanpa itu task `processDevDebugGoogleServices` gagal. `gradle.properties` gitignored: runner bersih tidak punya signing config, jadi `assembleRelease` tidak bisa ditandatangani di CI.
+
 ## Peta folder
 
 | Path | Tanggung jawab |

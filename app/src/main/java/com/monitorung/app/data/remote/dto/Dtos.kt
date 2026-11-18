@@ -234,3 +234,40 @@ data class CampusConfigDto(
     @SerializedName("mqtt_broker_url_fallback") val mqttBrokerUrlFallback: String = "",
 )
 
+// Log History DTOs — match server/app/schemas/log.py:LogHistoryResponse
+sealed interface LogHistoryItem {
+    data class AppUsage(
+        @SerializedName("type") val type: String = "app_usage",
+        @SerializedName("log_date") val logDate: String,
+        @SerializedName("total_screen_time_minutes") val totalScreenTimeMinutes: Int,
+        @SerializedName("social_media_time_minutes") val socialMediaTimeMinutes: Int,
+        @SerializedName("game_time_minutes") val gameTimeMinutes: Int,
+        @SerializedName("other_app_time_minutes") val otherAppTimeMinutes: Int,
+        @SerializedName("unlock_count") val unlockCount: Int,
+        @SerializedName("used_during_class") val usedDuringClass: Boolean,
+        @SerializedName("schedule_id") val scheduleId: String? = null,
+        @SerializedName("campus_id") val campusId: String? = null,
+        @SerializedName("geofence_status") val geofenceStatus: String? = null,
+        @SerializedName("is_synced") val isSynced: Boolean,
+    ) : LogHistoryItem
+
+    data class Location(
+        @SerializedName("type") val type: String = "location",
+        @SerializedName("recorded_at") val recordedAt: String,
+        @SerializedName("latitude") val latitude: Double,
+        @SerializedName("longitude") val longitude: Double,
+        @SerializedName("campus_id") val campusId: String? = null,
+        @SerializedName("is_on_campus") val isOnCampus: Boolean,
+        @SerializedName("matches_schedule") val matchesSchedule: Boolean,
+        @SerializedName("schedule_id") val scheduleId: String? = null,
+        @SerializedName("is_synced") val isSynced: Boolean,
+    ) : LogHistoryItem
+}
+
+data class LogHistoryResponse(
+    val items: List<LogHistoryItem>,
+    val total: Int,
+    @SerializedName("limit") val limit: Int,
+    @SerializedName("offset") val offset: Int,
+)
+

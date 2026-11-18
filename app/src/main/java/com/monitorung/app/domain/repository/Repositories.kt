@@ -136,7 +136,14 @@ interface ScheduleRequestRepository {
         lecturerId: String?,
         subjectNameRaw: String?,
         lecturerNameRaw: String?,
-        description: String
+        description: String,
+        /**
+         * Campus of the chosen subject. Approved requests copy it into
+         * `schedules.campus_id`, which the attendance check uses to confirm the
+         * student was on the right campus; dropping it here silently produced
+         * schedules that could never show campus presence.
+         */
+        campusId: String? = null,
     ): Result<ScheduleRequest>
     suspend fun getMyRequests(status: String? = null): Result<List<ScheduleRequest>>
 }

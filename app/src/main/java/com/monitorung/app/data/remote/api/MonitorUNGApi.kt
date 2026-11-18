@@ -76,4 +76,13 @@ interface MonitorUNGApi {
         @Body request: BatchLogRequest
     ): Response<BatchLogResponse>
 
+    @GET("api/logs/history")
+    suspend fun getLogHistory(
+        @Header("Authorization") token: String,
+        @Query("limit") limit: Int = 100,
+        @Query("offset") offset: Int = 0,
+        @Query("from_date") fromDate: String? = null,
+        @Query("to_date") toDate: String? = null,
+    ): Response<LogHistoryResponse>
+
 }

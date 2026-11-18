@@ -30,6 +30,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import com.monitorung.app.R
 import com.monitorung.app.domain.model.Schedule
+import com.monitorung.app.domain.model.ScheduleRequestDefaults
+import com.monitorung.app.domain.model.ScheduleRequestDraft
 import com.monitorung.app.domain.repository.ScheduleRequest
 import com.monitorung.app.presentation.ui.components.ConfettiBurst
 import com.monitorung.app.presentation.ui.components.EmptyStateBubble
@@ -91,17 +93,32 @@ fun ScheduleScreen(
 
     val pagerState = rememberPagerState(pageCount = { 2 })
     val haptics = rememberHapticFeedback()
+    // Set while a request is in flight from the sheet. The sheet stays open
+    // until the server answers, so a rejected submit can explain itself in
+    // place instead of vanishing with the form data.
+    var sheetSubmitting by remember { mutableStateOf(false) }
+    var sheetError by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(uiState.actionSuccess) {
         uiState.actionSuccess?.let {
             snackbarHostState.showSnackbar(it)
             showConfetti = true
+            // A request submitted from the sheet closes it only on success.
+            requestSheetTrigger = 0
+            sheetSubmitting = false
+            sheetError = null
             viewModel.clearActionSuccess()
         }
     }
     LaunchedEffect(uiState.error) {
         uiState.error?.let {
             snackbarHostState.showSnackbar(it)
+            // Only a submit in flight belongs to the sheet; background failures
+            // (schedule/directory loads) must not be pinned inside the form.
+            if (sheetSubmitting) {
+                sheetSubmitting = false
+                sheetError = it
+            }
             viewModel.clearError()
         }
     }
@@ -207,11 +224,27 @@ fun ScheduleScreen(
             subjects = uiState.subjects,
             lecturers = uiState.lecturers,
             isLoadingDirectory = uiState.isLoadingDirectory,
-            isSubmitting = uiState.isLoading,
-            initialDay = uiState.selectedDay,
-            onDismiss = { requestSheetTrigger = 0 },
+            isSubmitting = sheetSubmitting,
+            submitError = sheetError,
+            // The day chip row uses 0 for "Semua" (no filter). The request form
+            // needs a concrete day, so map 0 to today in WITA instead of
+            // forwarding 0 — the server rejects day_of_week=0 with HTTP 422.
+            initialDay = remember(uiState.selectedDay) {
+                ScheduleRequestDefaults.normalizeDayOfWeek(
+                    preferred = uiState.selectedDay,
+                    today = java.time.LocalDate.now(java.time.ZoneId.of("Asia/Makassar"))
+                        .dayOfWeek.value,
+                )
+            },
+            onDismiss = { requestSheetTrigger = 0; sheetError = null; sheetSubmitting = false },
             onSubmit = { day, start, end, room, subjectId, lecturerId, subjectName, lecturerName, desc ->
                 haptics.lightTap()
+                // Carry the subject's campus through to the request: the server
+                // copies it into schedules.campus_id on approval, and the
+                // attendance check needs it to verify on-campus presence.
+                val campusId = uiState.subjects.firstOrNull { it.id == subjectId }?.campusId
+                sheetError = null
+                sheetSubmitting = true
                 viewModel.submitScheduleRequest(
                     dayOfWeek = day,
                     startTime = start,
@@ -221,9 +254,11 @@ fun ScheduleScreen(
                     lecturerId = lecturerId,
                     subjectNameRaw = subjectName,
                     lecturerNameRaw = lecturerName,
-                    description = desc
+                    description = desc,
+                    campusId = campusId
                 )
-                requestSheetTrigger = 0
+                // The sheet stays open until the response arrives: success clears
+                // requestSheetTrigger, failure writes sheetError in place.
             }
         )
     }
@@ -668,6 +703,7 @@ private fun ScheduleRequestBottomSheet(
     lecturers: List<com.monitorung.app.domain.repository.LecturerItem>,
     isLoadingDirectory: Boolean,
     isSubmitting: Boolean,
+    submitError: String?,
     initialDay: Int,
     onDismiss: () -> Unit,
     onSubmit: (Int, String, String, String?, String?, String?, String?, String?, String) -> Unit
@@ -675,22 +711,32 @@ private fun ScheduleRequestBottomSheet(
     // Captured once in composition; falls back to localized default.
     val defaultDescription = stringResource(R.string.schedule_default_description)
     var selectedDay by remember { mutableIntStateOf(initialDay) }
-    val now = LocalTime.now()
+    // WITA, not the device zone: the schedule rows and the "active class" check
+    // both use Asia/Makassar, so the form's defaults must agree with them.
+    val witaNow = remember { LocalTime.now(java.time.ZoneId.of("Asia/Makassar")) }
     val defaultStart = remember {
-        // Round up to the next 30-minute mark so the default start is always in the future.
-        val minute = ((now.minute / 30) + 1) * 30
-        val rounded = if (minute >= 60) now.plusHours(1).withMinute(0) else now.withMinute(minute)
-        rounded.withSecond(0).withNano(0)
+        // Round up to the next 30-minute mark so the default start is always in
+        // the future, and always emit two-digit HH:MM — the server rejects "8:30".
+        ScheduleRequestDefaults.defaultStartTime(witaNow)
     }
-    val defaultEnd = remember { defaultStart.plusHours(2).withSecond(0).withNano(0) }
-    var startTime by remember { mutableStateOf(defaultStart.toString()) }
-    var endTime by remember { mutableStateOf(defaultEnd.toString()) }
+    val defaultEnd = remember { ScheduleRequestDefaults.defaultEndTime(defaultStart) }
+    var startTime by remember { mutableStateOf(defaultStart) }
+    var endTime by remember { mutableStateOf(defaultEnd) }
     var room by remember { mutableStateOf("") }
     var selectedSubjectId by remember { mutableStateOf("") }
     var selectedLecturerId by remember { mutableStateOf("") }
     var subjectNameRaw by remember { mutableStateOf("") }
     var lecturerNameRaw by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    // Inline validation message — the snackbar lives on the screen behind the
+    // sheet, so a rejected submit used to look like nothing happened.
+    var formError by remember { mutableStateOf<String?>(null) }
+
+    // Clear a stale validation message as soon as the student edits anything,
+    // so the form does not keep scolding a field they already fixed.
+    LaunchedEffect(selectedDay, startTime, endTime, selectedSubjectId, subjectNameRaw, description) {
+        formError = null
+    }
 
     var showStartTimePicker by remember { mutableStateOf(false) }
     var showEndTimePicker by remember { mutableStateOf(false) }
@@ -864,15 +910,29 @@ private fun ScheduleRequestBottomSheet(
             // Submit button — bouncy papercard press via SpringButton.
             SpringButton(
                 onClick = {
-                    onSubmit(
-                        selectedDay, startTime, endTime,
-                        room.ifEmpty { null },
-                        selectedSubjectId.ifEmpty { null },
-                        selectedLecturerId.ifEmpty { null },
-                        subjectNameRaw.ifEmpty { null },
-                        lecturerNameRaw.ifEmpty { null },
-                        description.ifEmpty { defaultDescription }
+                    // Validate against the server contract before spending a
+                    // round-trip: a rejected request must say why, not just 422.
+                    val draft = ScheduleRequestDraft(
+                        dayOfWeek = selectedDay,
+                        startTime = startTime,
+                        endTime = endTime,
+                        room = room.ifEmpty { null },
+                        subjectId = selectedSubjectId.ifEmpty { null },
+                        lecturerId = selectedLecturerId.ifEmpty { null },
+                        subjectNameRaw = subjectNameRaw.ifEmpty { null },
+                        lecturerNameRaw = lecturerNameRaw.ifEmpty { null },
+                        description = description.ifEmpty { defaultDescription },
                     )
+                    val problem = draft.validationError()
+                    formError = problem
+                    if (problem == null) {
+                        onSubmit(
+                            draft.dayOfWeek, draft.startTime, draft.endTime,
+                            draft.room, draft.subjectId, draft.lecturerId,
+                            draft.subjectNameRaw, draft.lecturerNameRaw,
+                            draft.description
+                        )
+                    }
                 },
                 modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
                 enabled = !isSubmitting && (selectedSubjectId.isNotEmpty() || subjectNameRaw.isNotEmpty()),
@@ -886,6 +946,24 @@ private fun ScheduleRequestBottomSheet(
                     Spacer(Modifier.width(8.dp))
                     Text(stringResource(R.string.schedule_submit), style = MaterialTheme.typography.titleMedium)
                 }
+            }
+
+            formError?.let { message ->
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+            // Server-side rejection (422 validation, 403, 404). Shown below the
+            // local check so the student sees the real reason instead of only
+            // "Failed to submit request: 422".
+            submitError?.let { message ->
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
             }
         }
     }
