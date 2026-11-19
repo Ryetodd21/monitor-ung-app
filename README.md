@@ -3,8 +3,9 @@
 Aplikasi pemantauan distraksi belajar mahasiswa **Universitas Negeri Gorontalo**.
 Menggabungkan screen time, jumlah unlock, jadwal kuliah, dan lokasi kampus untuk menghasilkan skor distraksi per kelas via PCA + K-Means (backend). Data dikumpulkan di HP, disinkronkan otomatis malam hari (22:00–04:00 WITA). apps ini membutuhkan 2 sistem lainnya
 
-project server: https://github.com/Ryetodd21/server
-project website: https://github.com/Ryetodd21/website
+- Production: <https://monitorterop.my.id>
+- Backend: `../server/` (FastAPI, port 8000) <https://github.com/Ryetodd21/server>
+- Android: `../monitor-ung-app/` <https://github.com/Ryetodd21/monitor-ung-app>Ryetodd21/website
 ---
 
 ## Quick Start
