@@ -1,8 +1,10 @@
 # Monitor UNG — Android App
 
 Aplikasi pemantauan distraksi belajar mahasiswa **Universitas Negeri Gorontalo**.
-Menggabungkan screen time, jumlah unlock, jadwal kuliah, dan lokasi kampus untuk menghasilkan skor distraksi per kelas via PCA + K-Means (backend). Data dikumpulkan di HP, disinkronkan otomatis malam hari (22:00–04:00 WITA).
+Menggabungkan screen time, jumlah unlock, jadwal kuliah, dan lokasi kampus untuk menghasilkan skor distraksi per kelas via PCA + K-Means (backend). Data dikumpulkan di HP, disinkronkan otomatis malam hari (22:00–04:00 WITA). apps ini membutuhkan 2 sistem lainnya
 
+project server: https://github.com/Ryetodd21/server
+project website: https://github.com/Ryetodd21/website
 ---
 
 ## Quick Start
